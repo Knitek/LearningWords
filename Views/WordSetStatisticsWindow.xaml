@@ -1,0 +1,49 @@
+﻿<Window x:Class="LearningWords.WordSetStatisticsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:LearningWords"
+        mc:Ignorable="d"
+        Title="Statistics" Height="300" Width="500">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Label Grid.Row="0" Content="{Binding WordSet.Name}"/>
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="2*"/>
+            </Grid.ColumnDefinitions>
+            <Label Grid.Column="0" Content="{Binding WordSet.Exercises}" ContentStringFormat="Ćwiczenia: {0}"/>
+            <Label Grid.Column="1" Content="{Binding WordSet.Tests}" ContentStringFormat="Testy: {0}"/>
+            <Label Grid.Column="2" Content="{Binding WordSet.LastUse}" ContentStringFormat="Ostatnie użycie: {0}"/>
+        </Grid>
+        <DataGrid Grid.Row="2" IsReadOnly="True" AutoGenerateColumns="False" ItemsSource="{Binding WordSet.Words}" 
+                  RowHeaderWidth="0" CanUserAddRows="False" CanUserDeleteRows="False" VerticalScrollBarVisibility="Visible">
+            <DataGrid.Columns>
+                <DataGridTextColumn Binding="{Binding Word1}" Header="Słowo 1" Width="*"/>
+                <DataGridTextColumn Binding="{Binding Word2}" Header="Słowo 2" Width="*"/>
+                <DataGridTextColumn Binding="{Binding Correct}" Header="Poprawne" Width="75">
+                    <DataGridTextColumn.HeaderStyle>
+                        <Style TargetType="DataGridColumnHeader">
+                            <Setter Property="ToolTip" Value="Ilość poprawnych odpowiedzi"/>
+                        </Style>
+                    </DataGridTextColumn.HeaderStyle>
+                </DataGridTextColumn>
+                <DataGridTextColumn Binding="{Binding Total}" Header="Wszystkie" Width="75">
+                    <DataGridTextColumn.HeaderStyle>
+                        <Style TargetType="DataGridColumnHeader">
+                            <Setter Property="ToolTip" Value="Ilość wszystkich odpowiedzi"/>
+                        </Style>
+                    </DataGridTextColumn.HeaderStyle>
+                </DataGridTextColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+        
+    </Grid>
+</Window>

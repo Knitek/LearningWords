@@ -1,0 +1,60 @@
+﻿<Window x:Class="LearningWords.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:LearningWords"
+        mc:Ignorable="d"
+        Closing="Window_Closing"
+        Title="Nauka słówek" Height="350" MinWidth="500" Width="525">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="25"/>
+            <RowDefinition/>
+            <RowDefinition Height="25"/>
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                <!--<StackPanel.Resources>
+                    <Style TargetType="Button">
+                        <Setter Value="3 2" Property="Margin"/>
+                        <Setter Property="VerticalContentAlignment" Value="Center"/>
+                    </Style>
+                </StackPanel.Resources>-->
+                <Button Width="100" Content="Nauka" Command="{Binding ExerciseCommand}" IsEnabled="{Binding WordSetIsSelected}"/>
+                <Button Width="80" Content="Dodaj" Command="{Binding AddCommand}"/>
+                <Button Width="80" Content="Edytuj" Command="{Binding EditCommand}" IsEnabled="{Binding WordSetIsSelected}"/>
+                <Button Width="80" Content="Usuń" Command="{Binding DeleteCommand}" IsEnabled="{Binding WordSetIsSelected}"/>
+                <Button Width="100" Content="Sprawdzian" Command="{Binding TestCommand}" IsEnabled="{Binding WordSetIsSelected}"/>
+            </StackPanel>
+        </Grid>
+        <Grid Grid.Row="1">
+            <DataGrid RowHeaderWidth="0" CanUserResizeRows="False" ItemsSource="{Binding WordSets}" SelectedItem="{Binding SelectedWordSet}" AutoGenerateColumns="False" CanUserAddRows="False" Margin="5">
+                <DataGrid.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Header="Statystyki" Command="{Binding ShowStatisticsCommand}" ToolTip="Wyświetla okno z statystykami wybranego zestawu słówek." IsEnabled="{Binding WordSetIsSelected}"/>
+                        <MenuItem Header="Import" Command="{Binding ImportCommand}" ToolTip="Wczytuje nowy zestaw z pliku tekstowego"/>
+                        <MenuItem Header="Eksport" Command="{Binding ExportCommand}" ToolTip="Zapisuje zestaw do pliku tekstowego." IsEnabled="{Binding WordSetIsSelected}"/>
+                    </ContextMenu>
+                </DataGrid.ContextMenu>
+                <DataGrid.Columns>
+                    <DataGridTextColumn Width="*" IsReadOnly="True" Header="Nazwa" Binding="{Binding Name}"/>
+                    <DataGridTextColumn MinWidth="50" IsReadOnly="True" Header="Słówka" Binding="{Binding Words.Count}"/>
+                    <DataGridTextColumn MinWidth="50" IsReadOnly="True" Header="Nauka" Binding="{Binding Exercises}"/>
+                    <DataGridTextColumn MinWidth="50" IsReadOnly="True" Header="Sprawdziany" Binding="{Binding Tests}"/>
+                    <DataGridTextColumn Width="100" IsReadOnly="True" Header="Ostatnia nauka" Binding="{Binding LastUse}"/>
+                </DataGrid.Columns>
+            </DataGrid>
+        </Grid>
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="8*"/>
+                <ColumnDefinition Width="2*"/>
+            </Grid.ColumnDefinitions>
+            <Label Grid.Column="0" HorizontalAlignment="Stretch">
+                <TextBlock Text="{Binding StatusText}" VerticalAlignment="Center"/>
+            </Label>
+            <Button Command="{Binding AboutWindowCommand}" Grid.Column="1" Margin="2 2 5 2" Padding="4 0" Content="O programie"/>
+        </Grid>
+    </Grid>
+</Window>

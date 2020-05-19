@@ -1,0 +1,24 @@
+﻿Lerning Words Changelog
+
+Build 20190130 v1.2.1
+Zmiany
+- poprawiono błąd całkowitej ilości prób odpowiedzi na słówko
+
+Build 20181108 v1.2
+Zmiany
+- dodano czytanie angielskich wyraców w oknie edycji zestawu słówek
+- dodano obsługe błędów dla otwierania okna edycji
+
+Build 20181002 v1.1
+Zmiany
+- dodano okno statystyk pod prawym przyciskiem myszy dla menu zestawu słówek
+- dodano okno statystyk po zakończonym teście lub sprawdzianie
+
+Build 20180928 v1.0
+Podstawowe funkcje programu
+- nauka do skutku
+- sprawdzin
+- dodawnie zestawów słówek
+- import/export
+- podpowiedzi
+- tryb odwrotności

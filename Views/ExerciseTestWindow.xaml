@@ -1,0 +1,44 @@
+﻿<Window x:Class="LearningWords.ExerciseTestWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:LearningWords"
+        mc:Ignorable="d"
+        FontSize="14"
+        Title="" Height="215" MinHeight="215" MinWidth="300" Width="300">
+    <Window.InputBindings>
+        <KeyBinding Key="Return" Command="{Binding CheckCommand}"/>
+        <KeyBinding Key="RightCtrl" Modifiers="Ctrl" Command="{Binding PromptCommand}"/>
+    </Window.InputBindings>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="40"/>
+            <RowDefinition Height="40"/>
+            <RowDefinition Height="40"/>
+            <RowDefinition Height="30"/>
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0">
+            <Menu Height="25" VerticalAlignment="Top">
+                <MenuItem Height="25" Header="Opcje">
+                    <CheckBox Content="Tryb odwrócony" IsChecked="{Binding Direction}"/>                    
+                </MenuItem>
+            </Menu>
+            
+        </Grid>
+        <TextBox IsReadOnly="True" Grid.Row="1" Text="{Binding AskedWord}" Margin="5 8" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+        <TextBox Grid.Row="2" Text="{Binding Answer,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Margin="5 8" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Focusable="True"/>
+        <Grid Grid.Row="3">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="1*"/>                
+            </Grid.ColumnDefinitions>
+            <Button Grid.Column="0" Content="Sprawdź" Margin="6" Command="{Binding CheckCommand}" ToolTip="Enter"/>
+            <Button Grid.Column="1" Content="Podpowiedź" Margin="6" Command="{Binding PromptCommand}" ToolTip="Prawy Ctrl"/>
+        </Grid>
+        <Label Grid.Row="5" Height="25" VerticalAlignment="Bottom" VerticalContentAlignment="Center" HorizontalContentAlignment="Stretch" Margin="5 0" Padding="0">
+            <TextBlock Text="{Binding StatusText}" VerticalAlignment="Center" Height="25"/>
+        </Label>
+    </Grid>
+</Window>
