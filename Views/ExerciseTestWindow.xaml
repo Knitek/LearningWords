@@ -38,7 +38,7 @@
             <Button Grid.Column="1" Content="Podpowiedź" Margin="6" Command="{Binding PromptCommand}" ToolTip="Prawy Ctrl"/>
         </Grid>
         <Label Grid.Row="5" Height="25" VerticalAlignment="Bottom" VerticalContentAlignment="Center" HorizontalContentAlignment="Stretch" Margin="5 0" Padding="0">
-            <TextBlock Text="{Binding StatusText}" VerticalAlignment="Center" Height="25"/>
+            <TextBlock Text="{Binding StatusText}" VerticalAlignment="Center" Height="25" Foreground="{Binding StatusTextColor}"/>
         </Label>
     </Grid>
 </Window>

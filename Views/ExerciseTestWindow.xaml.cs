@@ -20,21 +20,16 @@ namespace LearningWords
     public partial class ExerciseTestWindow : Window
     {
         ViewModel.ExerciseTestViewModel model { get; set; }
-        public ExerciseTestWindow(Model.WordSetModel wordset,bool Test)
+        public ExerciseTestWindow(Model.WordSetModel wordset,bool testMode)
         {
             model = new ViewModel.ExerciseTestViewModel(wordset);
             model.ExitAction = new Action(() => this.Close());
             InitializeComponent();
-            if(Test)
-            {
-                model.TestMode = true;
+            model.SetMode(testMode);
+            if (testMode == true)
                 Title = "Sprawdzian";
-            }
             else
-            {
                 Title = "Nauka";
-                model.TestMode = false;
-            }
             DataContext = model;
 
             this.Top = App.Current.MainWindow.Top;

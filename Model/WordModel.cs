@@ -28,4 +28,5 @@ namespace LearningWords.Model
                 return Word2.Trim().ToLower();
         }
     }
+
 }
