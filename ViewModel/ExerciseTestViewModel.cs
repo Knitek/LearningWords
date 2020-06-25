@@ -216,7 +216,7 @@ namespace LearningWords.ViewModel
             }
             else
             {
-                StatusText = "Źle, powinno być " + CurrentWordPair.GetAnswer(Direction);
+                StatusText = "Źle, powinno być: " + CurrentWordPair.GetAnswer(Direction);
                 StatusTextColor = System.Windows.Media.Brushes.DarkRed;
                 if (Mode == LearnMode.Test) State=3; //when test mode, program don't give time to see what's wrong and automaticly passes to last state
             }
@@ -245,15 +245,18 @@ namespace LearningWords.ViewModel
                         }
                         break;
                     }
-                case LearnMode.Exercise: //excercise
+                case LearnMode.Exercise: //excercise / ćwiczenie
                     {
                         if (state != 2)
                         {
                             List<WordModel> notAnswered = WordSet.Words.Except(correctAnswered).ToList();
                             if (notAnswered.Count > 0)
                             {
+                                WordModel previousPair = CurrentWordPair;
                                 ToolsLib.Tools.Shuffle(notAnswered);
                                 CurrentWordPair = notAnswered.First();
+                                if (previousPair.Word1 == currentWordPair.Word1 && notAnswered.Count > 1)
+                                    CurrentWordPair = notAnswered.ElementAt(1);
                                 AskedWord = CurrentWordPair.GetWord(Direction);
                                 Answer = string.Empty;
                                 State = 1;

@@ -28,13 +28,13 @@
             <DataGrid.Columns>
                 <DataGridTextColumn Binding="{Binding Word1}" Header="Słowo 1" Width="*"/>
                 <DataGridTextColumn Binding="{Binding Word2}" Header="Słowo 2" Width="*"/>
-                <DataGridTextColumn Binding="{Binding Correct}" Header="Poprawne" Width="75">
+                <!--<DataGridTextColumn Binding="{Binding Correct}" Header="Poprawne" Width="75">
                     <DataGridTextColumn.HeaderStyle>
                         <Style TargetType="DataGridColumnHeader">
                             <Setter Property="ToolTip" Value="Ilość poprawnych odpowiedzi"/>
                         </Style>
                     </DataGridTextColumn.HeaderStyle>
-                </DataGridTextColumn>
+                </DataGridTextColumn>-->
                 <DataGridTextColumn Binding="{Binding Total}" Header="Wszystkie" Width="75">
                     <DataGridTextColumn.HeaderStyle>
                         <Style TargetType="DataGridColumnHeader">

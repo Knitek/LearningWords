@@ -14,7 +14,7 @@ namespace LearningWords.ViewModel
     public class LearningWordsViewModel : INotifyPropertyChanged
     {
         public string title = "Nauka słówek";
-        public string version = "20190130 v1.2.1";
+        public string version = "20200526 v1.2.2";
         ObservableCollection<WordSetModel> wordSet { get; set; }
         WordSetModel selectedWordSet { get; set; }
         string statusText { get; set; }
@@ -128,6 +128,8 @@ namespace LearningWords.ViewModel
         {
             if(WordSetIsSelected)
             {
+                WordSetPreviewWindow wordSetPreviewWindow = new WordSetPreviewWindow(SelectedWordSet);
+                wordSetPreviewWindow.ShowDialog();
                 ExerciseTestWindow exerciseTestWindow = new ExerciseTestWindow(SelectedWordSet, false);
                 RaisePropertyChanged("WordSets");
             }
