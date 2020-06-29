@@ -85,9 +85,11 @@ namespace LearningWords.ViewModel
                 }
             }
         }
-        
+        public Action ExitAction { get; set; }
+        public CommandBase CloseCommand { get; set; }
         public WordSetPreviewViewModel( WordSetModel wordSetModel)
         {
+            CloseCommand = new CommandBase(Close);
             try
             {
                 HideFirst = bool.Parse(Tools.ReadAppSetting("HideFirstPrevievCollumn"));
@@ -117,7 +119,10 @@ namespace LearningWords.ViewModel
             Tools.WriteAppSetting("HideFirstPrevievCollumn", this.hideFirst.ToString());
             Tools.WriteAppSetting("HideSecondPrevievCollumn", this.hideSecond.ToString());
         }
-
+        void Close()
+        {
+            ExitAction.Invoke();
+        }
         public event PropertyChangedEventHandler PropertyChanged;
         private void RaisePropertyChanged(string property)
         {

@@ -24,6 +24,7 @@ namespace LearningWords
         {
             model = new ViewModel.ExerciseTestViewModel(wordset);
             model.ExitAction = new Action(() => this.Close());
+            model.CursorToEndAction = new Action(() => this.TextBoxCursorToEnd());
             InitializeComponent();
             model.SetMode(testMode);
             if (testMode == true)
@@ -35,6 +36,12 @@ namespace LearningWords
             this.Top = App.Current.MainWindow.Top;
             this.Left = App.Current.MainWindow.Left;
             this.ShowDialog();
+        }
+        private void TextBoxCursorToEnd()
+        {            
+            var txtBx = this.AnswerTextBox;
+            if (txtBx == null || txtBx.Text == null) return;
+            txtBx.CaretIndex = txtBx.Text?.Length ?? 0;
         }
     }
 }

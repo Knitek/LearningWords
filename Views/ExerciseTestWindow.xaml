@@ -6,6 +6,7 @@
         xmlns:local="clr-namespace:LearningWords"
         mc:Ignorable="d"
         FontSize="14"
+        FocusManager.FocusedElement="{Binding ElementName=AnswerTextBox}"
         Title="" Height="215" MinHeight="215" MinWidth="300" Width="300">
     <Window.InputBindings>
         <KeyBinding Key="Return" Command="{Binding CheckCommand}"/>
@@ -28,7 +29,8 @@
             
         </Grid>
         <TextBox IsReadOnly="True" Grid.Row="1" Text="{Binding AskedWord}" Margin="5 8" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
-        <TextBox Grid.Row="2" Text="{Binding Answer,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Margin="5 8" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Focusable="True"/>
+        <TextBox Grid.Row="2" Name="AnswerTextBox" Text="{Binding Answer,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Margin="5 8" HorizontalContentAlignment="Center" 
+                 VerticalContentAlignment="Center" Focusable="True"/>
         <Grid Grid.Row="3">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="1*"/>

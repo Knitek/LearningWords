@@ -27,7 +27,7 @@ namespace LearningWords
             model = new WordSetStatisticsViewModel(old, notold);
             InitializeComponent();
             this.DataContext = model;
-
+            model.ExitAction = new Action(() => this.Close());
             this.Top = App.Current.MainWindow.Top;
             this.Left = App.Current.MainWindow.Left;
         }

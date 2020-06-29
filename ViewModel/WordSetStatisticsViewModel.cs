@@ -29,13 +29,16 @@ namespace LearningWords.ViewModel
                 }
             }
         }
-        
+        public CommandBase CloseCommand { get; set; }
+        public Action ExitAction { get; set; }
         public WordSetStatisticsViewModel( WordSetModel wordSetModel)
         {
+            CloseCommand = new CommandBase(Close);
             this.wordSet = wordSetModel;
         }
         public WordSetStatisticsViewModel(WordSetModel old, WordSetModel after)
         {
+            CloseCommand = new CommandBase(Close);
             for(int i=0;i<old.Words.Count;i++)
             {
                 old.Words[i].Correct = after.Words.First(x => x.Word1 == old.Words[i].Word1).Correct - old.Words[i].Correct;
@@ -43,7 +46,10 @@ namespace LearningWords.ViewModel
             }
             this.wordSet = old;
         }
-
+        void Close()
+        {
+            ExitAction.Invoke();
+        }
         public event PropertyChangedEventHandler PropertyChanged;
         private void RaisePropertyChanged(string property)
         {

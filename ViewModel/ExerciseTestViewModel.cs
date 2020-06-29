@@ -28,7 +28,7 @@ namespace LearningWords.ViewModel
 
         public Action ClearStatusLabel { get; set; }
         public Action ExitAction { get; set; }
-
+        public Action CursorToEndAction { get; set; }
         public bool Direction
         {
             get
@@ -305,11 +305,13 @@ namespace LearningWords.ViewModel
             if((Answer?.Length ?? 0 ) == 0 && CurrentWordPair.Word2.Length > 1)
             {
                 Answer = CurrentWordPair.Word2.Substring(0, 1);
+                CursorToEndAction.Invoke();
                 return;
             }
             else if(Answer.Length==1 && CurrentWordPair.Word2.Length >2)
             {
                 Answer = CurrentWordPair.Word2.Substring(0, 2);
+                CursorToEndAction.Invoke();
                 return;
             }
             StatusText = "Nie można podpowiedzieć.";

@@ -6,11 +6,15 @@
         xmlns:local="clr-namespace:LearningWords"
         mc:Ignorable="d"
         Title="Statistics" Height="300" Width="500">
+    <Window.InputBindings>
+        <KeyBinding Key="Return" Command="{Binding CloseCommand}"/>
+    </Window.InputBindings>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="30"/>
             <RowDefinition Height="30"/>
             <RowDefinition Height="*"/>
+            <RowDefinition Height="30"/>
         </Grid.RowDefinitions>
         <Label Grid.Row="0" Content="{Binding WordSet.Name}"/>
         <Grid Grid.Row="1">
@@ -40,6 +44,6 @@
                 </DataGridTextColumn>
             </DataGrid.Columns>
         </DataGrid>
-        
+        <Button Grid.Row="3" Width="75" VerticalAlignment="Center" Command="{Binding CloseCommand}" Content="Dalej" IsDefault="True"/>
     </Grid>
 </Window>

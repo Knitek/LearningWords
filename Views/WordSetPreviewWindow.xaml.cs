@@ -28,7 +28,7 @@ namespace LearningWords
             model = new WordSetPreviewViewModel(wordset);
             InitializeComponent();
             this.DataContext = model;
-            
+            model.ExitAction = new Action(() => this.Close());
             this.Top = App.Current.MainWindow.Top;
             this.Left = App.Current.MainWindow.Left;
             Closing += model.SaveHideStatus;

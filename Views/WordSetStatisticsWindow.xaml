@@ -6,6 +6,9 @@
         xmlns:local="clr-namespace:LearningWords"
         mc:Ignorable="d"
         Title="Statistics" Height="300" Width="500">
+    <Window.InputBindings>
+        <KeyBinding Key="Return" Command="{Binding CloseCommand}"/>
+    </Window.InputBindings>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="30"/>
