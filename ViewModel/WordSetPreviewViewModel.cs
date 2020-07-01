@@ -90,24 +90,8 @@ namespace LearningWords.ViewModel
         public WordSetPreviewViewModel( WordSetModel wordSetModel)
         {
             CloseCommand = new CommandBase(Close);
-            try
-            {
-                HideFirst = bool.Parse(Tools.ReadAppSetting("HideFirstPrevievCollumn"));
-            }
-            catch
-            {
-                Tools.WriteAppSetting("HideFirstPrevievCollumn", "false");
-                HideFirst = false;
-            }
-            try
-            {
-                HideSecond = bool.Parse(Tools.ReadAppSetting("HideSecondPrevievCollumn"));
-            }
-            catch
-            {
-                Tools.WriteAppSetting("HideSecondPrevievCollumn", "false");
-                HideSecond = false;
-            }
+            HideFirst = bool.Parse(Tools.ReadAppSetting("HideFirstPrevievCollumn", "false"));
+            HideSecond = bool.Parse(Tools.ReadAppSetting("HideSecondPrevievCollumn", "false"));
             this.wordSet = wordSetModel;
         }
         ~WordSetPreviewViewModel()
@@ -116,8 +100,8 @@ namespace LearningWords.ViewModel
         }   
         public void SaveHideStatus(object sender, CancelEventArgs e)
         {
-            Tools.WriteAppSetting("HideFirstPrevievCollumn", this.hideFirst.ToString());
-            Tools.WriteAppSetting("HideSecondPrevievCollumn", this.hideSecond.ToString());
+            Tools.WriteAppSetting("HideFirstPrevievCollumn", this.hideFirst.ToString().ToLower());
+            Tools.WriteAppSetting("HideSecondPrevievCollumn", this.hideSecond.ToString().ToLower());
         }
         void Close()
         {

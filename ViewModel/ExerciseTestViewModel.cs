@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using LearningWords.Model;
 using LearningWords.Controls;
+using ToolsLib;
 
 namespace LearningWords.ViewModel 
 {
@@ -286,9 +287,17 @@ namespace LearningWords.ViewModel
         {
             if (StatusText == "Koniec")
             {
-                WordSetStatisticsWindow statistic = new WordSetStatisticsWindow(oldWordSet, WordSet);
-                statistic.Show();
-                ExitAction.Invoke();
+                for (int i = 0; i < oldWordSet.Words.Count; i++)
+                {
+                    oldWordSet.Words[i].Correct = WordSet.Words.First(x => x.Word1 == oldWordSet.Words[i].Word1).Correct - oldWordSet.Words[i].Correct;
+                    oldWordSet.Words[i].Total = WordSet.Words.First(x => x.Word1 == oldWordSet.Words[i].Word1).Total - oldWordSet.Words[i].Total;
+                }
+                if (Tools.ReadAppSetting("ShowStatistics", "true") == "true")
+                {
+                    WordSetStatisticsWindow statistic = new WordSetStatisticsWindow(oldWordSet);
+                    statistic.Show();
+                }
+                ExitAction.Invoke();                
                 return true;
             }
             else

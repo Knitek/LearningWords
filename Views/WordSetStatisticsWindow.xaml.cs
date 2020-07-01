@@ -22,23 +22,23 @@ namespace LearningWords
     public partial class WordSetStatisticsWindow : Window
     {
         WordSetStatisticsViewModel model { get; set; }
-        public WordSetStatisticsWindow(WordSetModel old, WordSetModel notold)
+        public WordSetStatisticsWindow(WordSetModel old)
         {
-            model = new WordSetStatisticsViewModel(old, notold);
+            model = new WordSetStatisticsViewModel(old);
             InitializeComponent();
             this.DataContext = model;
             model.ExitAction = new Action(() => this.Close());
             this.Top = App.Current.MainWindow.Top;
             this.Left = App.Current.MainWindow.Left;
         }
-        public WordSetStatisticsWindow(WordSetModel wordset)
-        {
-            model = new WordSetStatisticsViewModel(wordset);
-            InitializeComponent();
-            this.DataContext = model;
+        //public WordSetStatisticsWindow(WordSetModel wordset)
+        //{
+        //    model = new WordSetStatisticsViewModel(wordset);
+        //    InitializeComponent();
+        //    this.DataContext = model;
 
-            this.Top = App.Current.MainWindow.Top;
-            this.Left = App.Current.MainWindow.Left;
-        }
+        //    this.Top = App.Current.MainWindow.Top;
+        //    this.Left = App.Current.MainWindow.Left;
+        //}
     }
 }

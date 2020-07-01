@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using LearningWords.Model;
 using LearningWords.Controls;
 using System.Windows;
+using ToolsLib;
 
 namespace LearningWords.ViewModel
 {
@@ -83,6 +84,7 @@ namespace LearningWords.ViewModel
         public CommandBase DeleteCommand { get; set; }
         public CommandBase TestCommand { get; set; }
         public CommandBase AboutWindowCommand { get; set; }
+        public CommandBase OptionsWindowCommand { get; set; }
 
         public CommandBase ShowStatisticsCommand { get; set; }
         public CommandBase ImportCommand { get; set; }
@@ -105,6 +107,7 @@ namespace LearningWords.ViewModel
             DeleteCommand = new CommandBase(Delete);
             TestCommand = new CommandBase(Test);
             AboutWindowCommand = new CommandBase(AboutWindow);
+            OptionsWindowCommand = new CommandBase(OptionsWindow);
 
             ShowStatisticsCommand = new CommandBase(ShowStatistics);
             ImportCommand = new CommandBase(Import);
@@ -115,8 +118,8 @@ namespace LearningWords.ViewModel
         {
             try
             {
-                ToolsLib.Tools.GetOrSetDefaultDataDirectory();
-                ToolsLib.Tools.GetOrSetErrorLogPath();                
+                Tools.GetOrSetDefaultDataDirectory();
+                Tools.GetOrSetErrorLogPath();                
             }
             catch (Exception exc)
             {
@@ -128,8 +131,11 @@ namespace LearningWords.ViewModel
         {
             if(WordSetIsSelected)
             {
-                WordSetPreviewWindow wordSetPreviewWindow = new WordSetPreviewWindow(SelectedWordSet);
-                wordSetPreviewWindow.ShowDialog();
+                if (Tools.ReadAppSetting("ShowPreview","true") == "true")
+                {
+                    WordSetPreviewWindow wordSetPreviewWindow = new WordSetPreviewWindow(SelectedWordSet);
+                    wordSetPreviewWindow.ShowDialog();
+                }
                 ExerciseTestWindow exerciseTestWindow = new ExerciseTestWindow(SelectedWordSet, false);
                 RaisePropertyChanged("WordSets");
             }
@@ -182,6 +188,11 @@ namespace LearningWords.ViewModel
                 WordSets.Remove(SelectedWordSet);
                 StatusText = $"Zestaw '{tmpname}' został usunięty.";
             }
+        }
+        private void OptionsWindow()
+        {
+            OptionsWindow optionsWindow = new OptionsWindow();
+            optionsWindow.Show();
         }
         private void AboutWindow()
         {
@@ -279,11 +290,11 @@ namespace LearningWords.ViewModel
                 string path = ToolsLib.Tools.ReadAppSettingPath("defaultDataDirectory");
                 path = System.IO.Path.Combine(path, "Config.xml");
                 var tmpData = WordSets;
-                ToolsLib.Tools.Serialize(tmpData, path);
+                Tools.Serialize(tmpData, path);
             }
             catch(Exception exc)
             {
-                ToolsLib.Tools.ExceptionLogAndShow(exc, "SaveData");
+                Tools.ExceptionLogAndShow(exc, "SaveData");
             }
         }
         private void LoadData()

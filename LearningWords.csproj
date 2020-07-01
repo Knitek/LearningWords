@@ -87,8 +87,12 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="ViewModel\OptionsViewModel.cs" />
     <Compile Include="ViewModel\WordSetPreviewViewModel.cs" />
     <Compile Include="ViewModel\WordSetStatisticsViewModel.cs" />
+    <Compile Include="Views\OptionsWindow.xaml.cs">
+      <DependentUpon>OptionsWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\AddOrEditWindow.xaml.cs">
       <DependentUpon>AddOrEditWindow.xaml</DependentUpon>
     </Compile>
@@ -106,6 +110,10 @@
     <Compile Include="Views\WordSetStatisticsWindow.xaml.cs">
       <DependentUpon>WordSetStatisticsWindow.xaml</DependentUpon>
     </Compile>
+    <Page Include="Views\OptionsWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Views\AddOrEditWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
