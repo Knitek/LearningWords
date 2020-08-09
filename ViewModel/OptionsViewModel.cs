@@ -20,6 +20,8 @@ namespace LearningWords.ViewModel
         bool hideFirst { get; set; }
         bool hideSecond { get; set; }
 
+        bool specialCharactersMode { get; set; }
+
         public bool ShowPreview
         {
             get
@@ -77,7 +79,23 @@ namespace LearningWords.ViewModel
                 }
             }
         }
-       
+        public bool SpecialCharactersMode
+        {
+            get
+            {
+                return this.specialCharactersMode;
+            }
+            set
+            {
+                if(value != this.specialCharactersMode)
+                {
+                    this.specialCharactersMode = value;
+                    RaisePropertyChanged("SpecialCharactersMode");
+                }
+            }
+        }
+
+
         public Action CloseAction { get; set; }
 
         public CommandBase SaveCommand { get; set; }
@@ -89,6 +107,7 @@ namespace LearningWords.ViewModel
             HideFirst = bool.Parse(Tools.ReadAppSetting("HideFirstPrevievCollumn", "false"));
             HideSecond = bool.Parse(Tools.ReadAppSetting("HideSecondPrevievCollumn", "false"));
             ShowStatistics = bool.Parse(Tools.ReadAppSetting("ShowStatistics", "true"));
+            SpecialCharactersMode = bool.Parse(Tools.ReadAppSetting("SpecialCharactersMode", "false"));
             SaveCommand = new CommandBase(Save);
             CancelCommand = new CommandBase(Cancel);
            
@@ -100,6 +119,7 @@ namespace LearningWords.ViewModel
             Tools.WriteAppSetting("HideFirstPrevievCollumn", HideFirst.ToString().ToLower());
             Tools.WriteAppSetting("HideSecondPrevievCollumn", HideSecond.ToString().ToLower());
             Tools.WriteAppSetting("ShowStatistics", ShowStatistics.ToString().ToLower());
+            Tools.WriteAppSetting("SpecialCharactersMode", SpecialCharactersMode.ToString().ToLower());
             CloseAction.Invoke();
         }
         private void Cancel()

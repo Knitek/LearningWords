@@ -26,6 +26,7 @@
                 <RowDefinition Height="20"/>
                 <RowDefinition Height="5"/>
                 <RowDefinition Height="20"/>
+                <RowDefinition Height="20"/>
             </Grid.RowDefinitions>
             <CheckBox Grid.Row="0" Content="Otwieraj okno podglądu przed nauką" IsChecked="{Binding ShowPreview}" VerticalAlignment="Center" Margin="5 0"/>
             <CheckBox Grid.Row="1" Content="Ukryj pierwszą kolumnę podglądu zestawu" IsChecked="{Binding HideFirst}" VerticalAlignment="Center" 
@@ -33,7 +34,8 @@
             <CheckBox Grid.Row="2" Content="Ukryj drugą kolumnę podglądu zestawu" IsChecked="{Binding HideSecond}" VerticalAlignment="Center" 
                       Margin="20 0 5 0" IsEnabled="{Binding ShowPreview}"/>
             <CheckBox Grid.Row="4" Content="Otwieraj okno statystyk" IsChecked="{Binding ShowStatistics}" VerticalAlignment="Center" 
-                      Margin="5 0"/>            
+                      Margin="5 0"/>
+            <CheckBox Grid.Row="5" Content="Używaj tablicy znaków specjalnych" IsChecked="{Binding SpecialCharactersMode}" VerticalAlignment="Center" Margin="5 0"/>
         </Grid>
         <Grid Grid.Row="2">
             <Grid.ColumnDefinitions>

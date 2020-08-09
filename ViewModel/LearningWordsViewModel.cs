@@ -15,7 +15,7 @@ namespace LearningWords.ViewModel
     public class LearningWordsViewModel : INotifyPropertyChanged
     {
         public string title = "Nauka słówek";
-        public string version = "20200629 v1.2.3";
+        public string version = "20200809 v1.2.4";
         ObservableCollection<WordSetModel> wordSet { get; set; }
         WordSetModel selectedWordSet { get; set; }
         string statusText { get; set; }

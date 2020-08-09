@@ -31,13 +31,15 @@
                 <DataGridTextColumn Binding="{Binding Word1}" Header="Słowo 1" Width="*">
                     <DataGridTextColumn.CellStyle>
                         <Style TargetType="DataGridCell">
+                            <Setter Property="ToolTip" Value="{Binding Word2}"/>
                             <Setter Property="Visibility" Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}, Path=DataContext.FirstCollumnVisibility, Mode=OneWay}"/>
                         </Style>
                     </DataGridTextColumn.CellStyle>
                 </DataGridTextColumn>
-                <DataGridTextColumn Binding="{Binding Word2}" Header="Słowo 2" Width="*">
+                <DataGridTextColumn Binding="{Binding Word2}"  Header="Słowo 2" Width="*">
                     <DataGridTextColumn.CellStyle>
                         <Style TargetType="DataGridCell">
+                            <Setter Property="ToolTip" Value="{Binding Word1}"/>
                             <Setter Property="Visibility" Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}, Path=DataContext.SecondCollumnVisibility, Mode=OneWay}"/>
                         </Style>
                     </DataGridTextColumn.CellStyle>

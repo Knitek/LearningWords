@@ -8,6 +8,8 @@ using System.Threading.Tasks;
 using LearningWords.Model;
 using LearningWords.Controls;
 using ToolsLib;
+using System.IO;
+using System.Windows;
 
 namespace LearningWords.ViewModel 
 {
@@ -24,9 +26,40 @@ namespace LearningWords.ViewModel
         bool direction { get; set; }
         string askedWord { get; set; }
         short state { get; set; }
-
+        bool specialCharactersMode { get; set; }
+        Dictionary<string,string> specialCharacters { get; set; }
         List<WordModel> correctAnswered { get; set; }
 
+        public bool SpecialCharactersMode
+        {
+            get
+            {
+                return specialCharactersMode;
+            }
+            set
+            {
+                if(value != specialCharactersMode)
+                {
+                    specialCharactersMode = value;
+                    RaisePropertyChanged("SpecialCharactersMode");
+                }
+            }
+        }
+        public Dictionary<string,string> SpecialCharacters
+        {
+            get
+            {
+                return specialCharacters;
+            }
+            set
+            {
+                if(value != specialCharacters)
+                {
+                    specialCharacters = value;
+                    RaisePropertyChanged("SpecialCharacters");
+                }
+            }
+        }
         public Action ClearStatusLabel { get; set; }
         public Action ExitAction { get; set; }
         public Action CursorToEndAction { get; set; }
@@ -97,7 +130,11 @@ namespace LearningWords.ViewModel
                 {
                     if (string.IsNullOrWhiteSpace(answer) && value.Length == 1)
                         StatusText = "";
-                    answer = value;
+
+                    if (SpecialCharactersMode)
+                        answer = ReplaceSpecialCharacters(answer, value);
+                    else                    
+                        answer = value;
                     RaisePropertyChanged("Answer");
                 }
             }
@@ -160,6 +197,19 @@ namespace LearningWords.ViewModel
 
         public ExerciseTestViewModel(WordSetModel wordset)
         {
+            if (Tools.ReadAppSetting("ShowPreview", "false") == "true")
+            {
+                specialCharactersMode = true;
+                string filename = Tools.ReadAppSettingPath("SpecialCharacters");
+                if(File.Exists(filename))
+                {
+                    LoadSpecialCharacters(filename);
+                }
+                else
+                {
+                    MessageBox.Show("Nie znaleziono pliku ustawień znaków specjalnych", "Błąd", MessageBoxButton.OK);
+                }
+            }
             counter = 0;
             Mode = LearnMode.Exercise;
             StatusTextColor = System.Windows.Media.Brushes.Black;
@@ -325,7 +375,48 @@ namespace LearningWords.ViewModel
             }
             StatusText = "Nie można podpowiedzieć.";
         }
-        
+
+
+        string ReplaceSpecialCharacters(string oldValue, string newValue)
+        {
+            string result = newValue;
+
+            if (SpecialCharactersMode)
+            {
+                string newPart = string.Empty;
+                if (string.IsNullOrWhiteSpace(oldValue))
+                    newPart = newValue;
+                else
+                    newPart = newValue.TrimStart(oldValue.ToCharArray());
+
+                if (!string.IsNullOrWhiteSpace(newPart))
+                {
+                    if (SpecialCharacters.ContainsKey(newPart))
+                    {
+                        return newValue.Replace(newPart, SpecialCharacters[newPart]);
+                    }   
+                }
+            }
+            return result;
+        }
+        void LoadSpecialCharacters(string filename)
+        {
+            try
+            {
+                var lines = File.ReadAllLines(filename);
+                SpecialCharacters = new Dictionary<string, string>();
+                foreach (var line in lines)
+                {
+                    var fields = line.Split(';');
+                    SpecialCharacters.Add(fields.First(), fields.Last());
+                }
+            }
+            catch
+            {
+                MessageBox.Show("Nie udało się wczytać tablicy znaków specjalnych");
+                SpecialCharactersMode = false;
+            }
+        }
 
         public event PropertyChangedEventHandler PropertyChanged;
         private void RaisePropertyChanged(string property)
