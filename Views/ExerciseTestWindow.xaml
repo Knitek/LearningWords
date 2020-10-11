@@ -40,7 +40,14 @@
             <Button Grid.Column="1" Content="Podpowiedź" Margin="6" Command="{Binding PromptCommand}" ToolTip="Prawy Ctrl"/>
         </Grid>
         <Label Grid.Row="5" Height="25" VerticalAlignment="Bottom" VerticalContentAlignment="Center" HorizontalContentAlignment="Stretch" Margin="5 0" Padding="0">
-            <TextBlock Text="{Binding StatusText}" VerticalAlignment="Center" Height="25" Foreground="{Binding StatusTextColor}"/>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="9*"/>
+                    <ColumnDefinition Width="1*"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Column="0" Text="{Binding StatusText}" VerticalAlignment="Center" Height="25" Foreground="{Binding StatusTextColor}"/>
+                <Ellipse Grid.Column="1" Fill="{Binding HintCircle}" Width="10" Height="10" Margin="5" VerticalAlignment="Top"/>     
+            </Grid>            
         </Label>
     </Grid>
 </Window>

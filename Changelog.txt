@@ -1,5 +1,9 @@
 ﻿Lerning Words Changelog
 
+Build 20201011 v1.2.5
+Zmiany
+- dodano kolorowe kółeczko informujące o poprawności wproadzenia pierwszej litery słowa (z możliwością wyłączenia tego w opcjach)
+
 Build 20190130 v1.2.1
 Zmiany
 - poprawiono błąd całkowitej ilości prób odpowiedzi na słówko

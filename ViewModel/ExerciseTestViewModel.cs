@@ -20,6 +20,7 @@ namespace LearningWords.ViewModel
         WordSetModel oldWordSet { get; set; }
         string statusText { get; set; }
         System.Windows.Media.Brush statusTextColor { get; set; }
+        System.Windows.Media.Brush hintCircle { get; set; }
         WordModel currentWordPair { get; set; }
         string answer { get; set; }
         int counter { get; set; }
@@ -27,6 +28,7 @@ namespace LearningWords.ViewModel
         string askedWord { get; set; }
         short state { get; set; }
         bool specialCharactersMode { get; set; }
+        bool allowHints { get; set; }
         Dictionary<string,string> specialCharacters { get; set; }
         List<WordModel> correctAnswered { get; set; }
 
@@ -42,6 +44,21 @@ namespace LearningWords.ViewModel
                 {
                     specialCharactersMode = value;
                     RaisePropertyChanged("SpecialCharactersMode");
+                }
+            }
+        }
+        public bool AllowHints
+        {
+            get
+            {
+                return allowHints;
+            }
+            set
+            {
+                if(value != allowHints)
+                {
+                    allowHints = value;
+                    RaisePropertyChanged("AllowHints");
                 }
             }
         }
@@ -135,6 +152,18 @@ namespace LearningWords.ViewModel
                         answer = ReplaceSpecialCharacters(answer, value);
                     else                    
                         answer = value;
+                    if(AllowHints)
+                    {
+                        if (answer.Length > 0)
+                        {
+                            if (answer[0] == CurrentWordPair.GetAnswer(Direction)[0])
+                                HintCircle = System.Windows.Media.Brushes.Green;
+                            else
+                                HintCircle = System.Windows.Media.Brushes.Red;
+                        }
+                        else
+                            HintCircle = System.Windows.Media.Brushes.Transparent;
+                    }
                     RaisePropertyChanged("Answer");
                 }
             }
@@ -164,6 +193,18 @@ namespace LearningWords.ViewModel
             {
                 statusTextColor = value;
                 RaisePropertyChanged("StatusTextColor");
+            }
+        }
+        public System.Windows.Media.Brush HintCircle
+        {
+            get
+            {
+                return hintCircle;
+            }
+            set
+            {
+                hintCircle = value;
+                RaisePropertyChanged("HintCircle");
             }
         }
         public WordSetModel WordSet
@@ -197,7 +238,7 @@ namespace LearningWords.ViewModel
 
         public ExerciseTestViewModel(WordSetModel wordset)
         {
-            if (Tools.ReadAppSetting("ShowPreview", "false") == "true")
+            if (Tools.ReadAppSetting("SpecialCharactersMode", "false") == "true")
             {
                 specialCharactersMode = true;
                 string filename = Tools.ReadAppSettingPath("SpecialCharacters");
@@ -210,6 +251,17 @@ namespace LearningWords.ViewModel
                     MessageBox.Show("Nie znaleziono pliku ustawień znaków specjalnych", "Błąd", MessageBoxButton.OK);
                 }
             }
+
+            if(Tools.ReadAppSetting("AllowHints","true")=="true")
+            {
+                AllowHints = true;                
+            }
+            else
+            {
+                AllowHints = false;
+            }
+            HintCircle = System.Windows.Media.Brushes.Transparent;
+
             counter = 0;
             Mode = LearnMode.Exercise;
             StatusTextColor = System.Windows.Media.Brushes.Black;

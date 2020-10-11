@@ -19,7 +19,7 @@ namespace LearningWords.ViewModel
         bool showStatistics { get; set; }
         bool hideFirst { get; set; }
         bool hideSecond { get; set; }
-
+        bool allowHints { get; set; }
         bool specialCharactersMode { get; set; }
 
         public bool ShowPreview
@@ -36,7 +36,8 @@ namespace LearningWords.ViewModel
                     RaisePropertyChanged("ShowPreview");
                 }
             }
-        }public bool ShowStatistics
+        }
+        public bool ShowStatistics
         {
             get
             {
@@ -50,7 +51,8 @@ namespace LearningWords.ViewModel
                     RaisePropertyChanged("ShowStatistics");
                 }
             }
-        }public bool HideFirst
+        }
+        public bool HideFirst
         {
             get
             {
@@ -64,7 +66,8 @@ namespace LearningWords.ViewModel
                     RaisePropertyChanged("HideFirst");
                 }
             }
-        }public bool HideSecond
+        }
+        public bool HideSecond
         {
             get
             {
@@ -76,6 +79,21 @@ namespace LearningWords.ViewModel
                 {
                     this.hideSecond = value;
                     RaisePropertyChanged("HideSecond");
+                }
+            }
+        }
+        public bool AllowHints
+        {
+            get
+            {
+                return this.allowHints;
+            }
+            set
+            {
+                if(value!=this.allowHints)
+                {
+                    this.allowHints = value;
+                    RaisePropertyChanged("AllowHints");
                 }
             }
         }
@@ -108,6 +126,7 @@ namespace LearningWords.ViewModel
             HideSecond = bool.Parse(Tools.ReadAppSetting("HideSecondPrevievCollumn", "false"));
             ShowStatistics = bool.Parse(Tools.ReadAppSetting("ShowStatistics", "true"));
             SpecialCharactersMode = bool.Parse(Tools.ReadAppSetting("SpecialCharactersMode", "false"));
+            AllowHints = bool.Parse(Tools.ReadAppSetting("AllowHints", "true"));
             SaveCommand = new CommandBase(Save);
             CancelCommand = new CommandBase(Cancel);
            
@@ -120,6 +139,8 @@ namespace LearningWords.ViewModel
             Tools.WriteAppSetting("HideSecondPrevievCollumn", HideSecond.ToString().ToLower());
             Tools.WriteAppSetting("ShowStatistics", ShowStatistics.ToString().ToLower());
             Tools.WriteAppSetting("SpecialCharactersMode", SpecialCharactersMode.ToString().ToLower());
+            Tools.WriteAppSetting("AllowHints", AllowHints.ToString().ToLower());
+
             CloseAction.Invoke();
         }
         private void Cancel()
