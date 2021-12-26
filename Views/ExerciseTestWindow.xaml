@@ -46,7 +46,7 @@
                     <ColumnDefinition Width="1*"/>
                 </Grid.ColumnDefinitions>
                 <TextBlock Grid.Column="0" Text="{Binding StatusText}" VerticalAlignment="Center" Height="25" Foreground="{Binding StatusTextColor}"/>
-                <Ellipse Grid.Column="1" Fill="{Binding HintCircle}" Width="10" Height="10" Margin="5" VerticalAlignment="Top"/>     
+                <Ellipse Grid.Column="1" Fill="{Binding HintCircle}" Width="10" Height="10" Margin="5" VerticalAlignment="Top" ToolTip="Poprawność pierwszego znaku"/>     
             </Grid>            
         </Label>
     </Grid>

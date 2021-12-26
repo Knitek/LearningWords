@@ -141,11 +141,13 @@ namespace LearningWords.ViewModel
                 RaisePropertyChanged("WordSets");
             }
         }
+        
         private void Add()
         {
             try
             {
                 AddOrEditWindow addOrEditWindow = new AddOrEditWindow();
+                SetPosition(addOrEditWindow);
                 var tmp = addOrEditWindow.RunWindow();
                 if (tmp == null) return;
                 WordSets.Add(tmp);
@@ -164,8 +166,7 @@ namespace LearningWords.ViewModel
                 if (WordSetIsSelected)
                 {
                     AddOrEditWindow addOrEditWindow = new AddOrEditWindow(SelectedWordSet);
-                    addOrEditWindow.Top = App.Current.MainWindow.Top;
-                    addOrEditWindow.Left = App.Current.MainWindow.Left;
+                    SetPosition(addOrEditWindow);
                     var tmp = addOrEditWindow.RunWindow();
                     if (tmp == null) return;
 
@@ -193,11 +194,13 @@ namespace LearningWords.ViewModel
         private void OptionsWindow()
         {
             OptionsWindow optionsWindow = new OptionsWindow();
+            SetPosition(optionsWindow);
             optionsWindow.Show();
         }
         private void AboutWindow()
         {
-            ToolsLib.Wpf.AboutWindow aboutWindow = new ToolsLib.Wpf.AboutWindow(title, version, "Program do nauki słówek.");
+            ToolsLib.Wpf.AboutWindow aboutWindow = new ToolsLib.Wpf.AboutWindow(title, version, "Program do nauki słówek.") 
+            { Top = App.Current.MainWindow.Top, Left = App.Current.MainWindow.Left };
         }
         private void Test()
         {
@@ -212,8 +215,7 @@ namespace LearningWords.ViewModel
         {
             if (SelectedWordSet == null) return;
             WordSetStatisticsWindow win = new WordSetStatisticsWindow(SelectedWordSet);
-            win.Top = App.Current.MainWindow.Top;
-            win.Left = App.Current.MainWindow.Left;
+            SetPosition(win);
             win.Show();
         }
         private void Import()
@@ -320,7 +322,11 @@ namespace LearningWords.ViewModel
                 ToolsLib.Tools.ExceptionLogAndShow(exc, "LoadData");
             }
         }
-
+        private void SetPosition(Window window)
+        {
+            window.Top = App.Current.MainWindow.Top;
+            window.Left = App.Current.MainWindow.Left;
+        }
         private string SelectFile()
         {
             string tmp = String.Empty;
