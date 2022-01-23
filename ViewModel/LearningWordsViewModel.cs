@@ -224,32 +224,40 @@ namespace LearningWords.ViewModel
             {
                 string path = SelectFile();
                 if (path == null) return;
-
-                List<string> lines = System.IO.File.ReadAllLines(path).ToList();
-                if (lines[0] == string.Empty || lines[0] == System.Environment.NewLine) lines.RemoveAt(0);
-                if (lines.Last() == string.Empty || lines.Last() == System.Environment.NewLine) lines.Remove(lines.Last());
-                WordSetModel wordset = new WordSetModel();
-                wordset.Words = new ObservableCollection<WordModel>();
-
-                wordset.Name = "Nowy";
-                for (int i = 0; i < lines.Count; i++)
+                if (System.IO.Path.GetFileName(path).ToLower().Equals("config.xml"))
                 {
-                    if ((i + 1) < lines.Count)
+                    var tmpData = ToolsLib.Tools.Deserialize<ObservableCollection<WordSetModel>>(path);
+                    WordSets = tmpData;
+                    RaisePropertyChanged("WordSets");
+                }
+                else
+                {
+                    List<string> lines = System.IO.File.ReadAllLines(path).ToList();
+                    if (lines[0] == string.Empty || lines[0] == System.Environment.NewLine) lines.RemoveAt(0);
+                    if (lines.Last() == string.Empty || lines.Last() == System.Environment.NewLine) lines.Remove(lines.Last());
+                    WordSetModel wordset = new WordSetModel();
+                    wordset.Words = new ObservableCollection<WordModel>();
+
+                    wordset.Name = "Nowy";
+                    for (int i = 0; i < lines.Count; i++)
                     {
-                        wordset.Words.Add(new WordModel()
+                        if ((i + 1) < lines.Count)
                         {
-                            Word1 = lines[i],
-                            Word2 = lines[i + 1],
-                        });
-                        i++;
+                            wordset.Words.Add(new WordModel()
+                            {
+                                Word1 = lines[i],
+                                Word2 = lines[i + 1],
+                            });
+                            i++;
+                        }
                     }
+                    if (lines.Count % 2 != 0)
+                    {
+                        StatusText = "Możliwy błąd. Edytuj zestaw.";
+                    }
+                    WordSets.Add(wordset);
+                    RaisePropertyChanged("WordSets");
                 }
-                if (lines.Count % 2 != 0)
-                {
-                    StatusText = "Możliwy błąd. Edytuj zestaw.";
-                }
-                WordSets.Add(wordset);
-                RaisePropertyChanged("WordSets");
             }
             catch(Exception exc)
             {

@@ -57,5 +57,13 @@ namespace LearningWords
                 return null;
             }
         }
+
+        private void DataGrid_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            if(e.Key == Key.Enter)
+            {
+                (e.Source as DataGrid).CurrentColumn = (e.Source as DataGrid).Columns.First();
+            }
+        }
     }
 }

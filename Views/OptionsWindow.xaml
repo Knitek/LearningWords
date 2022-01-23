@@ -28,6 +28,7 @@
                 <RowDefinition Height="20"/>
                 <RowDefinition Height="20"/>
                 <RowDefinition Height="20"/>
+                <RowDefinition Height="20"/>
             </Grid.RowDefinitions>
             <CheckBox Grid.Row="0" Content="Otwieraj okno podglądu przed nauką" IsChecked="{Binding ShowPreview}" VerticalAlignment="Center" Margin="5 0"/>
             <CheckBox Grid.Row="1" Content="Ukryj pierwszą kolumnę podglądu zestawu" IsChecked="{Binding HideFirst}" VerticalAlignment="Center" 
@@ -38,6 +39,7 @@
                       Margin="5 0"/>
             <CheckBox Grid.Row="5" Content="Używaj tablicy znaków specjalnych" IsChecked="{Binding SpecialCharactersMode}" VerticalAlignment="Center" Margin="5 0"/>
             <CheckBox Grid.Row="6" Content="Zezwalaj na podpowiedzi pierwszej litery" IsChecked="{Binding AllowHints}" VerticalAlignment="Center" Margin="5 0"/>
+            <CheckBox Grid.Row="7" Content="Pokaż informację o nowej wersji programu" IsChecked="{Binding ShowNewVersionInfo}" VerticalAlignment="Center" IsEnabled="{Binding ShowNewVersionInfoVisibility}" Margin="5 0" ToolTip="Opcja dostępna po pojawieniu się nowszej wersji programu."/>
         </Grid>
         <Grid Grid.Row="2">
             <Grid.ColumnDefinitions>

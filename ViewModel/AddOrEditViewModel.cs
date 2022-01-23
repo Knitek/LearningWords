@@ -86,6 +86,7 @@ namespace LearningWords.ViewModel
 
         private void Save()
         {
+            words =  new ObservableCollection<WordModel>(words.ToList().Where(x => !(string.IsNullOrWhiteSpace(x.Word1) && string.IsNullOrWhiteSpace(x.Word2))));
             result = true;
             CloseAction.Invoke();
         }

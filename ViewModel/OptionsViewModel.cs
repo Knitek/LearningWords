@@ -21,6 +21,8 @@ namespace LearningWords.ViewModel
         bool hideSecond { get; set; }
         bool allowHints { get; set; }
         bool specialCharactersMode { get; set; }
+        bool showNewVersionInfo { get; set; }
+        bool showNewVersionInfoVisibility { get; set; }
 
         public bool ShowPreview
         {
@@ -112,6 +114,36 @@ namespace LearningWords.ViewModel
                 }
             }
         }
+        public bool ShowNewVersionInfo
+        {
+            get
+            {
+                return this.showNewVersionInfo;
+            }
+            set
+            {
+                if(value!= this.showNewVersionInfo)
+                {
+                    this.showNewVersionInfo = value;
+                    RaisePropertyChanged("ShowNewVersionInfo");
+                }
+            }
+        }
+        public bool ShowNewVersionInfoVisibility
+        {
+            get
+            {
+                return this.showNewVersionInfoVisibility;
+            }
+            set
+            {
+                if(value != this.showNewVersionInfoVisibility)
+                {
+                    this.showNewVersionInfoVisibility = value;
+                    RaisePropertyChanged("ShowNewVersionInfoVisibility");
+                }
+            }
+        }
 
 
         public Action CloseAction { get; set; }
@@ -127,6 +159,11 @@ namespace LearningWords.ViewModel
             ShowStatistics = bool.Parse(Tools.ReadAppSetting("ShowStatistics", "true"));
             SpecialCharactersMode = bool.Parse(Tools.ReadAppSetting("SpecialCharactersMode", "false"));
             AllowHints = bool.Parse(Tools.ReadAppSetting("AllowHints", "true"));
+            ShowNewVersionInfo = bool.Parse(Tools.ReadAppSetting("ShowUpdateNote", "true"));
+            if (Tools.ReadAppSetting("NewVersionAvailable", "false") == "false")
+                ShowNewVersionInfoVisibility = false;
+            else
+                ShowNewVersionInfoVisibility = true;
             SaveCommand = new CommandBase(Save);
             CancelCommand = new CommandBase(Cancel);
            
@@ -140,7 +177,7 @@ namespace LearningWords.ViewModel
             Tools.WriteAppSetting("ShowStatistics", ShowStatistics.ToString().ToLower());
             Tools.WriteAppSetting("SpecialCharactersMode", SpecialCharactersMode.ToString().ToLower());
             Tools.WriteAppSetting("AllowHints", AllowHints.ToString().ToLower());
-
+            Tools.WriteAppSetting("ShowUpdateNote", showNewVersionInfo.ToString().ToLower());
             CloseAction.Invoke();
         }
         private void Cancel()

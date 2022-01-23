@@ -26,12 +26,14 @@
                       RowHeaderWidth="5" 
                       SelectionMode="Single" 
                       AutoGenerateColumns="False" 
+                      PreviewKeyDown="DataGrid_PreviewKeyDown"
+                      CanUserDeleteRows="True"
                       CanUserAddRows="True">
-                <DataGrid.ContextMenu>
+                <!--<DataGrid.ContextMenu>
                     <ContextMenu>
                         <MenuItem Header="Czytaj" Command="{Binding ListenCommand}"/>
                     </ContextMenu>
-                </DataGrid.ContextMenu>
+                </DataGrid.ContextMenu>-->
                 <DataGrid.Resources>
                     <Style TargetType="DataGridColumnHeader">                        
                         <Setter Property="HorizontalContentAlignment" Value="Center"/>
