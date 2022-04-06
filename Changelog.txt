@@ -1,5 +1,14 @@
 ﻿Lerning Words Changelog
 
+Build 20220406 v1.2.6
+Zmiany
+- dodano opcje
+- dodano okno podglądu zestawu
+- dodano obsługe niestandardowych znaków
+- poprwiono lokalizację okien programu
+- kilka inny drobniejszych poprawek
+- dodano import zestawów nie tylko w formie tekstowej ale także config.xml z poprzednich wersji programu
+
 Build 20201011 v1.2.5
 Zmiany
 - dodano kolorowe kółeczko informujące o poprawności wproadzenia pierwszej litery słowa (z możliwością wyłączenia tego w opcjach)

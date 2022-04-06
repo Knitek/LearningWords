@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:LearningWords"
         mc:Ignorable="d"
-        Title="" MinHeight="300" Height="300" MinWidth="300" Width="300">
+        Title="Edycja" MinHeight="300" Height="300" MinWidth="300" Width="300">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="30"/>

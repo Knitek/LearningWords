@@ -13,6 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using LearningWords.ViewModel;
+using ToolsLib;
 
 namespace LearningWords
 {
@@ -25,6 +26,9 @@ namespace LearningWords
         public MainWindow()
         {
             InitializeComponent();
+#if DEBUG
+            Tools.WriteAppSetting("DoUpdateCheck", "false");
+#endif
             ToolsLib.Tools.CheckForUpdates(model.title, model.version);   
             model.ExitAction = new Action(() => this.Close());
             DataContext = model;

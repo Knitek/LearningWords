@@ -31,6 +31,11 @@ namespace LearningWords
             this.Top = App.Current.MainWindow.Top;
             this.Left = App.Current.MainWindow.Left;
         }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            this.Close();
+        }
         //public WordSetStatisticsWindow(WordSetModel wordset)
         //{
         //    model = new WordSetStatisticsViewModel(wordset);

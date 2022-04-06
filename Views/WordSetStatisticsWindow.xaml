@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:LearningWords"
         mc:Ignorable="d"
-        Title="Statistics" Height="300" Width="500">
+        Title="Statystyki" Height="300" Width="500">
     <Window.InputBindings>
         <KeyBinding Key="Return" Command="{Binding CloseCommand}"/>
     </Window.InputBindings>
@@ -14,6 +14,7 @@
             <RowDefinition Height="30"/>
             <RowDefinition Height="30"/>
             <RowDefinition Height="*"/>
+            <RowDefinition Height="30"/>
         </Grid.RowDefinitions>
         <Label Grid.Row="0" Content="{Binding WordSet.Name}"/>
         <Grid Grid.Row="1">
@@ -47,6 +48,6 @@
                 </DataGridTextColumn>
             </DataGrid.Columns>
         </DataGrid>
-        
+        <Button Grid.Row="4" Content="Ok" Click="Button_Click" Width="200px" />
     </Grid>
 </Window>

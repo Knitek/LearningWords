@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:LearningWords"
         mc:Ignorable="d"
-        Title="Statistics" Height="300" Width="500">
+        Title="Podgląd" Height="300" Width="500">
     <Window.InputBindings>
         <KeyBinding Key="Return" Command="{Binding CloseCommand}"/>
     </Window.InputBindings>
