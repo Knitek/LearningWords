@@ -9,6 +9,7 @@ using LearningWords.Model;
 using LearningWords.Controls;
 using System.Windows;
 using ToolsLib;
+using System.Windows.Forms;
 
 namespace LearningWords.ViewModel
 {
@@ -86,6 +87,9 @@ namespace LearningWords.ViewModel
             }
         }
         public Action ExitAction { get; set; }
+
+        public delegate void ChangeResult(bool result);
+        public ChangeResult ChangeDialogResult;
         public CommandBase CloseCommand { get; set; }
         public WordSetPreviewViewModel( WordSetModel wordSetModel)
         {
@@ -105,6 +109,7 @@ namespace LearningWords.ViewModel
         }
         void Close()
         {
+            ChangeDialogResult(true);
             ExitAction.Invoke();
         }
         public event PropertyChangedEventHandler PropertyChanged;

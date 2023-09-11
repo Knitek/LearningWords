@@ -32,6 +32,11 @@ namespace LearningWords
             this.Top = App.Current.MainWindow.Top;
             this.Left = App.Current.MainWindow.Left;
             Closing += model.SaveHideStatus;
-        }        
+            model.ChangeDialogResult = ChangeDialogResult;
+        }   
+        void ChangeDialogResult(bool result)
+        {
+            this.DialogResult = result;
+        }
     }
 }

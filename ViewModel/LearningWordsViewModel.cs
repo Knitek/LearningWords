@@ -132,11 +132,13 @@ namespace LearningWords.ViewModel
         {
             if(WordSetIsSelected)
             {
+                bool? startExercise = true;
                 if (Tools.ReadAppSetting("ShowPreview","true") == "true")
                 {
                     WordSetPreviewWindow wordSetPreviewWindow = new WordSetPreviewWindow(SelectedWordSet);
-                    wordSetPreviewWindow.ShowDialog();
+                    startExercise = wordSetPreviewWindow.ShowDialog() ?? false;
                 }
+                if (startExercise is false) return;
                 ExerciseTestWindow exerciseTestWindow = new ExerciseTestWindow(SelectedWordSet, false);
                 RaisePropertyChanged("WordSets");
             }
