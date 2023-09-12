@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         FontSize="14"
         FocusManager.FocusedElement="{Binding ElementName=AnswerTextBox}"
-        Title="" Height="215" MinHeight="215" MinWidth="300" Width="300">
+        Title="" Height="235" MinHeight="235" MinWidth="300" Width="300">
     <Window.InputBindings>
         <KeyBinding Key="Return" Command="{Binding CheckCommand}"/>
         <KeyBinding Key="RightCtrl" Modifiers="Ctrl" Command="{Binding PromptCommand}"/>
@@ -18,7 +18,7 @@
             <RowDefinition Height="40"/>
             <RowDefinition Height="40"/>
             <RowDefinition Height="40"/>
-            <RowDefinition Height="30"/>
+            <RowDefinition Height="50"/>
         </Grid.RowDefinitions>
         <Grid Grid.Row="0">
             <Menu Height="25" VerticalAlignment="Top">
@@ -39,14 +39,19 @@
             <Button Grid.Column="0" Content="Sprawdź" Margin="6" Command="{Binding CheckCommand}" ToolTip="Enter"/>
             <Button Grid.Column="1" Content="Podpowiedź" Margin="6" Command="{Binding PromptCommand}" ToolTip="Prawy Ctrl"/>
         </Grid>
-        <Label Grid.Row="5" Height="25" VerticalAlignment="Bottom" VerticalContentAlignment="Center" HorizontalContentAlignment="Stretch" Margin="5 0" Padding="0">
+        <Label Grid.Row="5" Height="52" VerticalAlignment="Bottom" VerticalContentAlignment="Center" HorizontalContentAlignment="Stretch" Margin="5 0" Padding="0">
             <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>       
+                </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="9*"/>
                     <ColumnDefinition Width="1*"/>
                 </Grid.ColumnDefinitions>
-                <TextBlock Grid.Column="0" Text="{Binding StatusText}" VerticalAlignment="Center" Height="25" Foreground="{Binding StatusTextColor}"/>
-                <Ellipse Grid.Column="1" Fill="{Binding HintCircle}" Width="10" Height="10" Margin="5" VerticalAlignment="Top" ToolTip="Poprawność pierwszego znaku"/>     
+                <TextBlock Grid.Row="0" Grid.Column="0" Text="{Binding StatusText}" VerticalAlignment="Center" Height="25" Foreground="{Binding StatusTextColor}"/>
+                <Ellipse Grid.Row="0" Grid.Column="1" Fill="{Binding HintCircle}" Width="10" Height="10" Margin="5" VerticalAlignment="Top" ToolTip="Poprawność pierwszego znaku"/>
+                <TextBlock Grid.Row="1" Grid.Column="0" Text="{Binding LeftCountText}" VerticalAlignment="Center" Height="20"/>
             </Grid>            
         </Label>
     </Grid>

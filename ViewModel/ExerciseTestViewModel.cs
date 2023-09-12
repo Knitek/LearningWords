@@ -24,6 +24,7 @@ namespace LearningWords.ViewModel
         WordModel currentWordPair { get; set; }
         string answer { get; set; }
         int counter { get; set; }
+        int leftCount { get; set; }
         bool direction { get; set; }
         string askedWord { get; set; }
         short state { get; set; }
@@ -80,6 +81,28 @@ namespace LearningWords.ViewModel
         public Action ClearStatusLabel { get; set; }
         public Action ExitAction { get; set; }
         public Action CursorToEndAction { get; set; }
+        public int LeftCount
+        {
+            get
+            {
+                return leftCount;
+            }
+            set
+            {
+                if(leftCount != value)
+                {
+                    leftCount = value;
+                    RaisePropertyChanged("LeftCountText");
+                }
+            }
+        }
+        public string LeftCountText
+        {
+            get
+            {
+                return "Pozostało: "+leftCount.ToString();
+            }
+        }
         public bool Direction
         {
             get
@@ -266,6 +289,7 @@ namespace LearningWords.ViewModel
             Mode = LearnMode.Exercise;
             StatusTextColor = System.Windows.Media.Brushes.Black;
             WordSet = wordset;
+            LeftCount = WordSet.Words.Count;
             oldWordSet = new WordSetModel(WordSet);
             ToolsLib.Tools.Shuffle(WordSet.Words);
             correctAnswered = new List<WordModel>();
@@ -331,6 +355,7 @@ namespace LearningWords.ViewModel
             {
                 case LearnMode.Test: //test
                     {
+                        LeftCount = WordSet.Words.Count - counter;
                         if (WordSet.Words.Count <= counter) // finish
                         {
                             Answer = StatusText;
@@ -353,6 +378,7 @@ namespace LearningWords.ViewModel
                         if (state != 2)
                         {
                             List<WordModel> notAnswered = WordSet.Words.Except(correctAnswered).ToList();
+                            LeftCount = notAnswered.Count;
                             if (notAnswered.Count > 0)
                             {
                                 WordModel previousPair = CurrentWordPair;
