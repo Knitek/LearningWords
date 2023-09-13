@@ -10,6 +10,7 @@ using LearningWords.Controls;
 using ToolsLib;
 using System.IO;
 using System.Windows;
+using System.Diagnostics;
 
 namespace LearningWords.ViewModel 
 {
@@ -328,29 +329,27 @@ namespace LearningWords.ViewModel
         {
             counter++;
             state++;
-
-
+            //states: 1-fresh 2-check answer 3-analize failure
             if (IsFinished()) return;
-            
-            if ((Answer?.ToLower()?.Trim() ?? "") == CurrentWordPair.GetAnswer(Direction))
+            if (state == 2)
             {
-                StatusText = "Dobrze";
-                StatusTextColor = System.Windows.Media.Brushes.DarkGreen;
-                CurrentWordPair.Correct++;
-                correctAnswered.Add(CurrentWordPair);
-                State = 3; 
-                
+                if ((Answer?.ToLower()?.Trim() ?? "") == CurrentWordPair.GetAnswer(Direction))
+                {
+                    StatusText = "Dobrze";
+                    StatusTextColor = System.Windows.Media.Brushes.DarkGreen;
+                    CurrentWordPair.Correct++;
+                    CurrentWordPair.Total++;
+                    correctAnswered.Add(CurrentWordPair);
+                    state = 3;
+                }
+                else
+                {
+                    StatusText = "Źle, powinno być: " + CurrentWordPair.GetAnswer(Direction);
+                    StatusTextColor = System.Windows.Media.Brushes.DarkRed;
+                    CurrentWordPair.Total++;
+                    if (Mode == LearnMode.Test) state++; //when test mode, program don't give time to see what's wrong and automaticly passes to last state             
+                }
             }
-            else
-            {
-                StatusText = "Źle, powinno być: " + CurrentWordPair.GetAnswer(Direction);
-                StatusTextColor = System.Windows.Media.Brushes.DarkRed;
-                if (Mode == LearnMode.Test) State=3; //when test mode, program don't give time to see what's wrong and automaticly passes to last state
-            }
-
-            if (State != 2)
-                CurrentWordPair.Total++;
-
             switch (Mode)
             {
                 case LearnMode.Test: //test
@@ -366,7 +365,7 @@ namespace LearningWords.ViewModel
                         }
                         else//next
                         {
-                            State = 1;
+                            state = 1;
                             CurrentWordPair = WordSet.Words[counter];
                             AskedWord = CurrentWordPair.GetWord(Direction);
                             Answer = string.Empty;
@@ -375,7 +374,7 @@ namespace LearningWords.ViewModel
                     }
                 case LearnMode.Exercise: //excercise / ćwiczenie
                     {
-                        if (state != 2)
+                        if (state == 3)
                         {
                             List<WordModel> notAnswered = WordSet.Words.Except(correctAnswered).ToList();
                             LeftCount = notAnswered.Count;
@@ -388,8 +387,7 @@ namespace LearningWords.ViewModel
                                     CurrentWordPair = notAnswered.ElementAt(1);
                                 AskedWord = CurrentWordPair.GetWord(Direction);
                                 Answer = string.Empty;
-                                State = 1;
-                                
+                                state = 1;                                
                             }
                             else
                             {
