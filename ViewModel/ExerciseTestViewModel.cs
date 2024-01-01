@@ -361,6 +361,7 @@ namespace LearningWords.ViewModel
                             WordSet.LastUse = DateTime.Now;
                             WordSet.Tests++;
                             StatusText = "Koniec";
+                            SaveLog(WordSet.Name, Mode);
                             return;
                         }
                         else//next
@@ -395,15 +396,20 @@ namespace LearningWords.ViewModel
                                 WordSet.LastUse = DateTime.Now;
                                 WordSet.Exercises++;
                                 StatusText = "Koniec";
+                                SaveLog(WordSet.Name,Mode);
                                 return;
                             }
                         }
                         break;
-                    }
+                    }                    
             }
             if (state != 2)
                 ClearStatus();
             
+        }
+        private void SaveLog(string wordSetName,LearnMode learnMode)
+        {
+            System.IO.File.AppendAllText("LearnLog.txt", $"{DateTime.Now.ToString()}\t{wordSetName}\t{learnMode}\r\n");
         }
         private void ClearStatus()
         {
