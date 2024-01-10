@@ -61,6 +61,7 @@ namespace LearningWords.ViewModel
         public CommandBase SaveCommand { get; set; }
         public CommandBase CancelCommand { get; set; }
         public CommandBase ListenCommand { get; set; }
+        public CommandBase SwaapCommand { get; set; }
 
         public AddOrEditViewModel()
         {
@@ -68,6 +69,7 @@ namespace LearningWords.ViewModel
             SaveCommand = new CommandBase(Save);
             CancelCommand = new CommandBase(Cancel);
             ListenCommand = new CommandBase(Listen);
+            SwaapCommand = new CommandBase(SwaapWords);
             speechSynthesizer = new SpeechSynthesizer();
             try
             {
@@ -83,7 +85,17 @@ namespace LearningWords.ViewModel
                     speechSynthesizer.SelectVoice(tmpVoices.FirstOrDefault().VoiceInfo.Name);
             }
         }
-
+        private void SwaapWords()
+        {
+            if(words==null || words.Count==0) return;
+            foreach(var word in Words)
+            {
+                var tmp = word.Word1;
+                word.Word1 = word.Word2;
+                word.Word2 = tmp;
+            }
+            Words = new ObservableCollection<WordModel>(Words);
+        }
         private void Save()
         {
             words =  new ObservableCollection<WordModel>(words.ToList().Where(x => !(string.IsNullOrWhiteSpace(x.Word1) && string.IsNullOrWhiteSpace(x.Word2))));

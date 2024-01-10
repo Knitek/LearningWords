@@ -9,6 +9,7 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="30"/>
+            <RowDefinition Height="30"/>
             <RowDefinition/>
             <RowDefinition Height="30"/>
         </Grid.RowDefinitions>
@@ -20,9 +21,12 @@
             <Label Grid.Column="0" Content="Nazwa: " VerticalAlignment="Center" Margin="3"/>
             <TextBox Grid.Column="1" Text="{Binding Name,Mode=TwoWay}" Margin="3"/>
         </Grid>
-        <Grid Grid.Row="1">
-            <DataGrid SelectedItem="{Binding SelectedWordModel}" 
-                      ItemsSource="{Binding Words}"
+        <StackPanel Grid.Row="1" Margin="3" VerticalAlignment="Center">
+            <Button Content="Zamień kolumny" Command="{Binding SwaapCommand}" Height="20px" VerticalAlignment="Center" />
+        </StackPanel>
+        <Grid Grid.Row="2">
+            <DataGrid  SelectedItem="{Binding SelectedWordModel,Mode=OneTime}" 
+                      ItemsSource="{Binding Words, Mode=TwoWay}"
                       RowHeaderWidth="5" 
                       SelectionMode="Single" 
                       AutoGenerateColumns="False" 
@@ -31,7 +35,8 @@
                       CanUserAddRows="True">
                 <!--<DataGrid.ContextMenu>
                     <ContextMenu>
-                        <MenuItem Header="Czytaj" Command="{Binding ListenCommand}"/>
+                        <MenuItem Header="Zamień kolumny" Command="{Binding SwaapCommand}"/>                        
+                        --><!--<MenuItem Header="Czytaj" Command="{Binding ListenCommand}"/>--><!--
                     </ContextMenu>
                 </DataGrid.ContextMenu>-->
                 <DataGrid.Resources>
@@ -45,7 +50,7 @@
                 </DataGrid.Columns>
             </DataGrid>
         </Grid>
-        <Grid Grid.Row="2">
+        <Grid Grid.Row="3">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
                 <ColumnDefinition/>
