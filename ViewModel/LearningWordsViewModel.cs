@@ -86,6 +86,7 @@ namespace LearningWords.ViewModel
         public CommandBase TestCommand { get; set; }
         public CommandBase AboutWindowCommand { get; set; }
         public CommandBase OptionsWindowCommand { get; set; }
+        public CommandBase ActivityCalendarCommand { get; set; }
 
         public CommandBase ShowStatisticsCommand { get; set; }
         public CommandBase ImportCommand { get; set; }
@@ -107,8 +108,9 @@ namespace LearningWords.ViewModel
             EditCommand = new CommandBase(Edit);
             DeleteCommand = new CommandBase(Delete);
             TestCommand = new CommandBase(Test);
-            AboutWindowCommand = new CommandBase(AboutWindow);
+            ActivityCalendarCommand = new CommandBase(ActivityCalendarWindow);
             OptionsWindowCommand = new CommandBase(OptionsWindow);
+            AboutWindowCommand = new CommandBase(AboutWindow);
 
             ShowStatisticsCommand = new CommandBase(ShowStatistics);
             ImportCommand = new CommandBase(Import);
@@ -198,6 +200,11 @@ namespace LearningWords.ViewModel
             OptionsWindow optionsWindow = new OptionsWindow();
             SetPosition(optionsWindow);
             optionsWindow.Show();
+        }
+        private void ActivityCalendarWindow()
+        {
+            Views.ActivityCalendarWindow activityCalendarWindow = new Views.ActivityCalendarWindow();
+            activityCalendarWindow.Show();
         }
         private void AboutWindow()
         {

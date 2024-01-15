@@ -48,15 +48,17 @@
         </Grid>
         <Grid Grid.Row="2">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="8*"/>
+                <ColumnDefinition Width="6*"/>
+                <ColumnDefinition Width="2*"/>
                 <ColumnDefinition Width="2*"/>
                 <ColumnDefinition Width="2*"/>
             </Grid.ColumnDefinitions>
             <Label Grid.Column="0" HorizontalAlignment="Stretch">
                 <TextBlock Text="{Binding StatusText}" VerticalAlignment="Center"/>
             </Label>
-            <Button Command="{Binding OptionsWindowCommand}" Grid.Column="1" Margin="2 2 5 2" Padding="4 0" Content="Opcje"/>
-            <Button Command="{Binding AboutWindowCommand}" Grid.Column="2" Margin="2 2 5 2" Padding="4 0" Content="O programie"/>
+            <Button Command="{Binding ActivityCalendarCommand}" Grid.Column="1" Margin="2 2 5 2" Padding="4 0" Content="Aktywność"/>
+            <Button Command="{Binding OptionsWindowCommand}" Grid.Column="2" Margin="2 2 5 2" Padding="4 0" Content="Opcje"/>
+            <Button Command="{Binding AboutWindowCommand}" Grid.Column="3" Margin="2 2 5 2" Padding="4 0" Content="O programie"/>
         </Grid>
     </Grid>
 </Window>
