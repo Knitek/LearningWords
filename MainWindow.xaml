@@ -34,6 +34,7 @@
                     <ContextMenu>
                         <MenuItem Header="Statystyki" Command="{Binding ShowStatisticsCommand}" ToolTip="Wyświetla okno z statystykami wybranego zestawu słówek." IsEnabled="{Binding WordSetIsSelected}"/>
                         <MenuItem Header="Import" Command="{Binding ImportCommand}" ToolTip="Wczytuje nowy zestaw z pliku tekstowego"/>
+                        <MenuItem Header="Importuj ze schowka" Command="{Binding ImportClipboardCommand}" ToolTip="Wczytuje nowy zestaw z schowka windows"/>
                         <MenuItem Header="Eksport" Command="{Binding ExportCommand}" ToolTip="Zapisuje zestaw do pliku tekstowego." IsEnabled="{Binding WordSetIsSelected}"/>
                     </ContextMenu>
                 </DataGrid.ContextMenu>

@@ -89,6 +89,8 @@ namespace LearningWords.ViewModel
 
         public CommandBase ShowStatisticsCommand { get; set; }
         public CommandBase ImportCommand { get; set; }
+        public CommandBase ImportClipboardCommand { get; set; }
+
         public CommandBase ExportCommand { get; set; }
 
         public LearningWordsViewModel()
@@ -112,6 +114,7 @@ namespace LearningWords.ViewModel
 
             ShowStatisticsCommand = new CommandBase(ShowStatistics);
             ImportCommand = new CommandBase(Import);
+            ImportClipboardCommand = new CommandBase(ImportClipboard);
             ExportCommand = new CommandBase(Export);
             LoadData();
         }
@@ -219,6 +222,39 @@ namespace LearningWords.ViewModel
             WordSetStatisticsWindow win = new WordSetStatisticsWindow(SelectedWordSet);
             SetPosition(win);
             win.Show();
+        }
+        private void ImportClipboard()
+        {
+            try
+            {
+                if (Clipboard.ContainsText(TextDataFormat.Text))
+                {
+                    string clipboardText = Clipboard.GetText(TextDataFormat.Text);
+                    var lines = clipboardText.Split( "\r\n".ToCharArray(),StringSplitOptions.RemoveEmptyEntries).ToList().Select(x=>x.Split('\t')).ToList();
+                    WordSetModel wordset = new WordSetModel();
+                    wordset.Words = new ObservableCollection<WordModel>();
+
+                    wordset.Name = "Nowy";
+                    for (int i = 0; i < lines.Count; i++)
+                    {
+                        wordset.Words.Add(new WordModel()
+                        {
+                            Word1 = lines[i].First().Trim(),
+                            Word2 = lines[i].Last().Trim(),
+                        });
+                    }
+                    if (lines.Any(x=>x.Length != 2))
+                    {
+                        StatusText = "Możliwy błąd. Edytuj zestaw.";
+                    }
+                    WordSets.Add(wordset);
+                    RaisePropertyChanged("WordSets");
+                }
+            }
+            catch (Exception exc)
+            {
+                ToolsLib.Tools.ExceptionLogAndShow(exc, "Import()");
+            }
         }
         private void Import()
         {
