@@ -5,10 +5,25 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:LearningWords"
         mc:Ignorable="d"
-        Title="ActivityCalendarWindow" Height="250" Width="300">
+        Title="ActivityCalendarWindow" Height="250" Width="520">
     <Grid>
         <!-- Kalendarz -->
-        <ItemsControl ItemsSource="{Binding CalendarDays}" Height="154px">
+        <ScrollViewer  HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Disabled">
+            <Grid Margin="5">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="30px"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Grid Grid.Row="0" >
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="100px"/>
+                        <ColumnDefinition Width="1000px"/>
+                        <ColumnDefinition Width="100px"/>
+                    </Grid.ColumnDefinitions>
+                    <Label Grid.Column="0" Content="{Binding StartDate}"/>
+                    <Label Grid.Column="2" Content="{Binding EndDate}" HorizontalAlignment="Right" HorizontalContentAlignment="Right"/>
+                </Grid>
+        <ItemsControl Grid.Row="1" ItemsSource="{Binding CalendarDays}" Height="154px" Width="1200" Margin="0,0" >
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
                     <WrapPanel Orientation="Vertical"/>
@@ -16,8 +31,8 @@
             </ItemsControl.ItemsPanel>
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <Border BorderBrush="Black" BorderThickness="1">
-                        <TextBlock Text="{Binding Date.Day}" HorizontalAlignment="Center" Width="20px" Height="20px" VerticalAlignment="Center">
+                    <Border BorderBrush="Black" BorderThickness="2" CornerRadius="2" Margin="1">
+                        <TextBlock ToolTip="{Binding Date}" HorizontalAlignment="Left" Width="16px" Height="16px"  VerticalAlignment="Center">
                             <TextBlock.Background>                                
                                     <SolidColorBrush Color="{Binding DayColor}"/>
                             </TextBlock.Background>
@@ -26,6 +41,8 @@
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
         </ItemsControl>
+                    </Grid>
+        </ScrollViewer>
         <!-- Dodatkowe elementy, np. wybór daty, itp. -->
     </Grid>
     <!--<Grid>
