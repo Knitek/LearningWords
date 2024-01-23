@@ -20,7 +20,7 @@ namespace LearningWords.ViewModel
         ObservableCollection<WordSetModel> wordSet { get; set; }
         WordSetModel selectedWordSet { get; set; }
         string statusText { get; set; }
-        
+        public int dayGoal { get; set; }
 
         public ObservableCollection<WordSetModel> WordSets
         {
@@ -33,7 +33,7 @@ namespace LearningWords.ViewModel
                 if (wordSet != value)
                 {
                     wordSet = value;
-                    RaisePropertyChanged("WordSet");
+                    RaisePropertyChanged("WordSet");                    
                 }
             }
         }
@@ -50,6 +50,29 @@ namespace LearningWords.ViewModel
                 }
             }
         }
+        public int DayGoal
+        {
+            get
+            {
+                return this.dayGoal;
+            }
+            set
+            {
+                if(this.dayGoal != value)
+                {
+                    this.dayGoal = value;
+                    RaisePropertyChanged("DayGoal");
+                }
+            }
+        }
+        public string GoalStatus
+        {
+            get
+            {
+                var todayComplete = wordSet.Where(x => x.LastUse.Date == DateTime.Today.Date).Select(x=>x.Words.Count).Sum();
+                return todayComplete.ToString() + "/" + DayGoal.ToString();
+            }
+        }
         public string StatusText
         {
             get
@@ -62,7 +85,8 @@ namespace LearningWords.ViewModel
                 {
                     statusText = value;
                     RaisePropertyChanged("StatusText");
-                    Task.Factory.StartNew(ClearStatusAction);
+                    if(StatusText.StartsWith("Dzienny") is false)
+                        Task.Factory.StartNew(ClearStatusAction);
                 }
             }
         }
@@ -95,14 +119,16 @@ namespace LearningWords.ViewModel
 
         public LearningWordsViewModel()
         {
-            SetUpSettings();
+            SetUpSettings();            
             WordSets = new ObservableCollection<WordSetModel>();
             ClearStatusAction = new Action(async () => 
             {
                 string textToClear = StatusText;
                 await Task.Delay(TimeSpan.FromSeconds(2.5));
                 if(textToClear == StatusText)
-                    StatusText = "";
+                {
+                    DayGoalStatusText();
+                }
             });
             ExerciseCommand = new CommandBase(Exercise);
             AddCommand = new CommandBase(Add);
@@ -117,6 +143,8 @@ namespace LearningWords.ViewModel
             ImportClipboardCommand = new CommandBase(ImportClipboard);
             ExportCommand = new CommandBase(Export);
             LoadData();
+            LoadGoalSettings();
+            DayGoalStatusText();
         }
         private void SetUpSettings()
         {
@@ -130,21 +158,30 @@ namespace LearningWords.ViewModel
                 MessageBox.Show(exc.Message);
             }
         }
-
-        private void Exercise()
+        private void LoadGoalSettings()
         {
-            if(WordSetIsSelected)
+            var dayGoalActive = bool.Parse(Tools.ReadAppSetting("DayGoalActive", "false"));
+            if (dayGoalActive)
             {
-                bool? startExercise = true;
-                if (Tools.ReadAppSetting("ShowPreview","true") == "true")
+                int tmp = int.Parse(Tools.ReadAppSetting("DayGoal", "0"));
+                if (tmp > 0)
                 {
-                    WordSetPreviewWindow wordSetPreviewWindow = new WordSetPreviewWindow(SelectedWordSet);
-                    startExercise = wordSetPreviewWindow.ShowDialog() ?? false;
+                    DayGoal = tmp;
+                    RaisePropertyChanged("StatusText");
                 }
-                if (startExercise is false) return;
-                ExerciseTestWindow exerciseTestWindow = new ExerciseTestWindow(SelectedWordSet, false);
-                RaisePropertyChanged("WordSets");
             }
+            else
+            {
+                DayGoal = 0;
+                RaisePropertyChanged("StatusText");
+            }
+        }
+        private void DayGoalStatusText()
+        {
+            if (DayGoal != 0)
+                StatusText = "Dzienny cel: " + GoalStatus;
+            else
+                StatusText = "";
         }
         
         private void Add()
@@ -201,19 +238,37 @@ namespace LearningWords.ViewModel
             OptionsWindow optionsWindow = new OptionsWindow();
             SetPosition(optionsWindow);
             optionsWindow.Show();
+            optionsWindow.Closed += (o, ea) => { LoadGoalSettings(); DayGoalStatusText(); };
         }
         private void AboutWindow()
         {
             ToolsLib.Wpf.AboutWindow aboutWindow = new ToolsLib.Wpf.AboutWindow(title, version, "Program do nauki słówek.") 
             { Top = App.Current.MainWindow.Top, Left = App.Current.MainWindow.Left };
         }
+        private void Exercise()
+        {
+            if (WordSetIsSelected)
+            {
+                bool? startExercise = true;
+                if (Tools.ReadAppSetting("ShowPreview", "true") == "true")
+                {
+                    WordSetPreviewWindow wordSetPreviewWindow = new WordSetPreviewWindow(SelectedWordSet);
+                    startExercise = wordSetPreviewWindow.ShowDialog() ?? false;
+                }
+                if (startExercise is false) return;
+                ExerciseTestWindow exerciseTestWindow = new ExerciseTestWindow(SelectedWordSet, false);
+                RaisePropertyChanged("WordSets");
+                DayGoalStatusText();
+            }
+        }
+
         private void Test()
         {
             if(WordSetIsSelected)
             {
-                ExerciseTestWindow exerciseTestWindow = new ExerciseTestWindow(SelectedWordSet,true);
-                
+                ExerciseTestWindow exerciseTestWindow = new ExerciseTestWindow(SelectedWordSet,true);                
                 RaisePropertyChanged("WordSets");
+                DayGoalStatusText();
             }
         }
         private void ShowStatistics()

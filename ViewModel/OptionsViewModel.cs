@@ -23,7 +23,8 @@ namespace LearningWords.ViewModel
         bool specialCharactersMode { get; set; }
         bool showNewVersionInfo { get; set; }
         bool showNewVersionInfoVisibility { get; set; }
-
+        bool dayGoalActive { get; set; }
+        string dayGoal { get; set; } 
         public bool ShowPreview
         {
             get
@@ -144,7 +145,36 @@ namespace LearningWords.ViewModel
                 }
             }
         }
-
+        public bool DayGoalActive
+        {
+            get
+            {
+                return this.dayGoalActive;
+            }
+            set
+            {
+                if(value != this.dayGoalActive)
+                {
+                    this.dayGoalActive = value;
+                    RaisePropertyChanged($"DayGoalActive");
+                }
+            }
+        }
+        public string DayGoal
+        {
+            get
+            {
+                return this.dayGoal;
+            }
+            set
+            {
+                if(value != this.dayGoal)
+                {
+                    this.dayGoal = value;
+                    RaisePropertyChanged("DayGoal");
+                }
+            }
+        }
 
         public Action CloseAction { get; set; }
 
@@ -160,6 +190,9 @@ namespace LearningWords.ViewModel
             SpecialCharactersMode = bool.Parse(Tools.ReadAppSetting("SpecialCharactersMode", "false"));
             AllowHints = bool.Parse(Tools.ReadAppSetting("AllowHints", "true"));
             ShowNewVersionInfo = bool.Parse(Tools.ReadAppSetting("ShowUpdateNote", "true"));
+            DayGoalActive = bool.Parse(Tools.ReadAppSetting("DayGoalActive", "false"));
+            DayGoal = int.Parse(Tools.ReadAppSetting("DayGoal", "0")).ToString();
+
             if (Tools.ReadAppSetting("NewVersionAvailable", "false") == "false")
                 ShowNewVersionInfoVisibility = false;
             else
@@ -178,6 +211,9 @@ namespace LearningWords.ViewModel
             Tools.WriteAppSetting("SpecialCharactersMode", SpecialCharactersMode.ToString().ToLower());
             Tools.WriteAppSetting("AllowHints", AllowHints.ToString().ToLower());
             Tools.WriteAppSetting("ShowUpdateNote", showNewVersionInfo.ToString().ToLower());
+            Tools.WriteAppSetting("DayGoalActive", dayGoalActive.ToString().ToLower());
+            if(DayGoal.All(x=> char.IsNumber(x)))
+                Tools.WriteAppSetting("DayGoal", DayGoal.ToString().ToLower());
             CloseAction.Invoke();
         }
         private void Cancel()
