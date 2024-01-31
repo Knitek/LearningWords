@@ -180,7 +180,7 @@ namespace LearningWords.ViewModel
                     {
                         if (answer.Length > 0)
                         {
-                            if (answer[0] == CurrentWordPair.GetAnswer(Direction)[0])
+                            if (answer.ToLower()[0] == CurrentWordPair.GetAnswer(Direction)[0])
                                 HintCircle = System.Windows.Media.Brushes.Green;
                             else
                                 HintCircle = System.Windows.Media.Brushes.Red;
