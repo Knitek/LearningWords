@@ -11,6 +11,7 @@ using ToolsLib;
 using System.IO;
 using System.Windows;
 using System.Diagnostics;
+using System.Windows.Media.Media3D;
 
 namespace LearningWords.ViewModel 
 {
@@ -34,6 +35,50 @@ namespace LearningWords.ViewModel
         Dictionary<string,string> specialCharacters { get; set; }
         List<WordModel> correctAnswered { get; set; }
 
+        int windowHeight { get; set; }
+        int windowWidth { get; set; }
+
+        public int WindowTop
+        {
+            get
+            {
+                return int.Parse(Tools.ReadAppSetting("ExerciseTestWindowTop", "0"));
+            }
+        }
+        public int WindowLeft
+        {
+            get
+            {
+                return int.Parse(Tools.ReadAppSetting("ExerciseTestWindowLeft", "0"));
+            }
+        }
+        public int WindowHeight
+        {
+            get
+            {
+                return windowHeight;
+            }
+            set
+            {
+                if (value != windowHeight)
+                {
+                    windowHeight = value;
+                    RaisePropertyChanged("ExerciseTestWindowHeight");
+                }
+            }
+        }
+        public int WindowWidth
+        {
+            get { return windowWidth; }
+            set
+            {
+                if (value != windowWidth)
+                {
+                    windowWidth = value;
+                    RaisePropertyChanged("ExerciseTestWindowWidth");
+                }
+            }
+        }
         public bool SpecialCharactersMode
         {
             get
@@ -80,6 +125,7 @@ namespace LearningWords.ViewModel
             }
         }
         public Action ClearStatusLabel { get; set; }
+   
         public Action ExitAction { get; set; }
         public Action CursorToEndAction { get; set; }
         public int LeftCount
@@ -284,6 +330,8 @@ namespace LearningWords.ViewModel
             {
                 AllowHints = false;
             }
+            WindowHeight = int.Parse(Tools.ReadAppSetting("ExerciseTestWindowHeight", "235"));
+            WindowWidth = int.Parse(Tools.ReadAppSetting("ExerciseTestWindowWidth", "300"));
             HintCircle = System.Windows.Media.Brushes.Transparent;
 
             counter = 0;
@@ -313,7 +361,16 @@ namespace LearningWords.ViewModel
                 }
             });
         }
-        
+        public void SaveWindowSize(int width, int height)
+        {
+            Tools.WriteAppSetting("ExerciseTestWindowWidth", width.ToString());
+            Tools.WriteAppSetting("ExerciseTestWindowHeight", height.ToString());
+        }
+        public void SavePosition(int top, int left)
+        {
+            Tools.WriteAppSetting("ExerciseTestWindowTop", top.ToString());
+            Tools.WriteAppSetting("ExerciseTestWindowLeft", left.ToString());
+        }
         public void SetMode(bool mode)
         {
             if (mode)
