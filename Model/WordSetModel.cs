@@ -11,10 +11,14 @@ namespace LearningWords.Model
     public class WordSetModel : INotifyPropertyChanged
     {
         string name { get; set; }
+        string groupName { get; set; }
         int exercises { get; set; }
         int tests { get; set; }
         ObservableCollection<WordModel> words { get; set; }
+        WordSetModel paretWordSet { get; set; }
+        ObservableCollection<WordSetModel> childWordSets { get; set; }
         DateTime lastUse { get; set; }
+        
         
         public string Name
         {
@@ -85,6 +89,36 @@ namespace LearningWords.Model
                 }
             }
         }
+        public ObservableCollection<WordSetModel> ChildWordSets
+        {
+            get
+            {
+                return childWordSets;
+            }
+            set
+            {
+                if (childWordSets != value)
+                {
+                    childWordSets = value;
+                    RaisePropertyChanged("ChildWordSets");
+                }
+            }
+        }
+        public WordSetModel ParentWordSet
+        {
+            get
+            {
+                return paretWordSet;
+            }
+            set
+            {
+                if (paretWordSet != value)
+                {
+                    paretWordSet = value;
+                    RaisePropertyChanged("ParentWordSet");
+                }
+            }
+        }
         public WordSetModel()
         {
             Words = new ObservableCollection<WordModel>();
@@ -107,7 +141,15 @@ namespace LearningWords.Model
                 });
             }
         }
+        public WordSetModel(ref WordSetModel parent, List<WordSetModel> wordSetModels,string name)
+        {
+            Name = name;
+            ParentWordSet = parent;
+            childWordSets = new ObservableCollection<WordSetModel>(wordSetModels);
+        }
         
+        
+
         public event PropertyChangedEventHandler PropertyChanged;
         private void RaisePropertyChanged(string property)
         {

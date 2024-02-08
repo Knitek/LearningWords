@@ -29,7 +29,7 @@
             </StackPanel>
         </Grid>
         <Grid Grid.Row="1">
-            <DataGrid RowHeaderWidth="0" CanUserResizeRows="False" ItemsSource="{Binding WordSets}" SelectedItem="{Binding SelectedWordSet}" AutoGenerateColumns="False" CanUserAddRows="False" Margin="5">
+            <DataGrid RowHeaderWidth="0" CanUserResizeRows="False" ItemsSource="{Binding WordSet.ChildWordSets}" SelectedItem="{Binding SelectedWordSet}" AutoGenerateColumns="False" CanUserAddRows="False" Margin="5">
                 <DataGrid.ContextMenu>
                     <ContextMenu>
                         <MenuItem Header="Statystyki" Command="{Binding ShowStatisticsCommand}" ToolTip="Wyświetla okno z statystykami wybranego zestawu słówek." IsEnabled="{Binding WordSetIsSelected}"/>

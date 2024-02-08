@@ -17,12 +17,13 @@ namespace LearningWords.ViewModel
         public string title = "Nauka słówek";
         //public string version = "20200809 v1.2.4";
         public string version = "20220406 v1.2.6";
-        ObservableCollection<WordSetModel> wordSet { get; set; }
+        WordSetModel wordSet { get; set; }
         WordSetModel selectedWordSet { get; set; }
         string statusText { get; set; }
         public int dayGoal { get; set; }
 
-        public ObservableCollection<WordSetModel> WordSets
+
+        public WordSetModel WordSet
         {
             get
             {
@@ -69,7 +70,7 @@ namespace LearningWords.ViewModel
         {
             get
             {
-                var todayComplete = wordSet.Where(x => x.LastUse.Date == DateTime.Today.Date).Select(x=>x.Words.Count).Sum();
+                var todayComplete = wordSet.ChildWordSets.Where(x => x.LastUse.Date == DateTime.Today.Date).Select(x=>x.Words.Count).Sum();
                 return todayComplete.ToString() + "/" + DayGoal.ToString();
             }
         }
@@ -120,7 +121,7 @@ namespace LearningWords.ViewModel
         public LearningWordsViewModel()
         {
             SetUpSettings();            
-            WordSets = new ObservableCollection<WordSetModel>();
+            WordSet = new WordSetModel();
             ClearStatusAction = new Action(async () => 
             {
                 string textToClear = StatusText;
@@ -192,8 +193,8 @@ namespace LearningWords.ViewModel
                 SetPosition(addOrEditWindow);
                 var tmp = addOrEditWindow.RunWindow();
                 if (tmp == null) return;
-                WordSets.Add(tmp);
-                RaisePropertyChanged("WordSets");
+                WordSet.ChildWordSets.Add(tmp);
+                RaisePropertyChanged("WordSet");
                 StatusText = $"Dodano {tmp.Name} do listy zestawów.";
             }
             catch (Exception exc)
@@ -215,7 +216,7 @@ namespace LearningWords.ViewModel
                     SelectedWordSet.Name = tmp.Name;
                     SelectedWordSet.Tests = 0;
                     SelectedWordSet.Words = tmp.Words;
-                    RaisePropertyChanged("WordSets");
+                    RaisePropertyChanged("WordSet");
                     StatusText = $"Zestaw '{tmp.Name}' został zmodyfikowany.";
                 }
             }
@@ -229,7 +230,7 @@ namespace LearningWords.ViewModel
             if(WordSetIsSelected)
             {
                 var tmpname = SelectedWordSet.Name;
-                WordSets.Remove(SelectedWordSet);
+                WordSet.ChildWordSets.Remove(SelectedWordSet);
                 StatusText = $"Zestaw '{tmpname}' został usunięty.";
             }
         }
@@ -257,7 +258,7 @@ namespace LearningWords.ViewModel
                 }
                 if (startExercise is false) return;
                 ExerciseTestWindow exerciseTestWindow = new ExerciseTestWindow(SelectedWordSet, false);
-                RaisePropertyChanged("WordSets");
+                RaisePropertyChanged("WordSet");
                 DayGoalStatusText();
             }
         }
@@ -267,7 +268,7 @@ namespace LearningWords.ViewModel
             if(WordSetIsSelected)
             {
                 ExerciseTestWindow exerciseTestWindow = new ExerciseTestWindow(SelectedWordSet,true);                
-                RaisePropertyChanged("WordSets");
+                RaisePropertyChanged("WordSet");
                 DayGoalStatusText();
             }
         }
@@ -302,8 +303,8 @@ namespace LearningWords.ViewModel
                     {
                         StatusText = "Możliwy błąd. Edytuj zestaw.";
                     }
-                    WordSets.Add(wordset);
-                    RaisePropertyChanged("WordSets");
+                    WordSet.ChildWordSets.Add(wordset);
+                    RaisePropertyChanged("WordSet");
                 }
             }
             catch (Exception exc)
@@ -319,9 +320,9 @@ namespace LearningWords.ViewModel
                 if (path == null) return;
                 if (System.IO.Path.GetFileName(path).ToLower().Equals("config.xml"))
                 {
-                    var tmpData = ToolsLib.Tools.Deserialize<ObservableCollection<WordSetModel>>(path);
-                    WordSets = tmpData;
-                    RaisePropertyChanged("WordSets");
+                    var tmpData = ToolsLib.Tools.Deserialize<WordSetModel>(path);
+                    WordSet = tmpData;
+                    RaisePropertyChanged("WordSet");
                 }
                 else
                 {
@@ -348,8 +349,8 @@ namespace LearningWords.ViewModel
                     {
                         StatusText = "Możliwy błąd. Edytuj zestaw.";
                     }
-                    WordSets.Add(wordset);
-                    RaisePropertyChanged("WordSets");
+                    WordSet.ChildWordSets.Add(wordset);
+                    RaisePropertyChanged("WordSet");
                 }
             }
             catch(Exception exc)
@@ -393,7 +394,9 @@ namespace LearningWords.ViewModel
             {
                 string path = ToolsLib.Tools.ReadAppSettingPath("defaultDataDirectory");
                 path = System.IO.Path.Combine(path, "Config.xml");
-                var tmpData = WordSets;
+
+                var tmpData = WordSet;
+                
                 Tools.Serialize(tmpData, path);
             }
             catch(Exception exc)
@@ -409,13 +412,13 @@ namespace LearningWords.ViewModel
                 path = System.IO.Path.Combine(path, "Config.xml");
                 if (!System.IO.File.Exists(path))
                 {
-                    ToolsLib.Tools.Serialize(new ObservableCollection<WordSetModel>(), path);
-                    WordSets = new ObservableCollection<WordSetModel>();
+                    ToolsLib.Tools.Serialize(new WordSetModel(), path);
+                    WordSet = new WordSetModel();
                 }
                 else
                 {
-                    var tmpData = ToolsLib.Tools.Deserialize<ObservableCollection<WordSetModel>>(path);
-                    WordSets = tmpData;
+                    var tmpData = ToolsLib.Tools.Deserialize<WordSetModel>(path);
+                    WordSet = tmpData;
                 }                
             }
             catch (Exception exc)
