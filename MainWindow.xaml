@@ -29,13 +29,17 @@
             </StackPanel>
         </Grid>
         <Grid Grid.Row="1">
-            <DataGrid RowHeaderWidth="0" CanUserResizeRows="False" ItemsSource="{Binding WordSet.ChildWordSets}" SelectedItem="{Binding SelectedWordSet}" AutoGenerateColumns="False" CanUserAddRows="False" Margin="5">
+            <DataGrid RowHeaderWidth="0" CanUserResizeRows="False" ItemsSource="{Binding CurrentWordSetList.ChildWordSets}" SelectedItem="{Binding SelectedWordSet}" AllowDrop="True" SelectionMode="Extended" AutoGenerateColumns="False" CanUserAddRows="False" Margin="5" Name="wordSetDataGrid">
                 <DataGrid.ContextMenu>
                     <ContextMenu>
                         <MenuItem Header="Statystyki" Command="{Binding ShowStatisticsCommand}" ToolTip="Wyświetla okno z statystykami wybranego zestawu słówek." IsEnabled="{Binding WordSetIsSelected}"/>
                         <MenuItem Header="Import" Command="{Binding ImportCommand}" ToolTip="Wczytuje nowy zestaw z pliku tekstowego"/>
                         <MenuItem Header="Importuj ze schowka" Command="{Binding ImportClipboardCommand}" ToolTip="Wczytuje nowy zestaw z schowka windows"/>
                         <MenuItem Header="Eksport" Command="{Binding ExportCommand}" ToolTip="Zapisuje zestaw do pliku tekstowego." IsEnabled="{Binding WordSetIsSelected}"/>
+                        <MenuItem Header="Otwórz grupę" Command="{Binding OpenWordSetGroupCommand}" ToolTip="Otwiera grupę zestawów słów"/>
+                        <MenuItem Header="Wróć wyżej" Command="{Binding GoBackCommand}" ToolTip="Przechodzi do wcześniejszej listy"/>
+                        <MenuItem Header="Wyciąg zestaw" Command="{Binding BringOut}" ToolTip="Wyciąga zestaw do nadrzędnej grupy"/>
+                        
                     </ContextMenu>
                 </DataGrid.ContextMenu>
                 <DataGrid.Columns>
@@ -49,15 +53,17 @@
         </Grid>
         <Grid Grid.Row="2">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="8*"/>
+                <ColumnDefinition Width="7*"/>
+                <ColumnDefinition Width="1*"/>
                 <ColumnDefinition Width="2*"/>
                 <ColumnDefinition Width="2*"/>
             </Grid.ColumnDefinitions>
             <Label Grid.Column="0" HorizontalAlignment="Stretch">
                 <TextBlock Text="{Binding StatusText}" VerticalAlignment="Center"/>
-            </Label>
-            <Button Command="{Binding OptionsWindowCommand}" Grid.Column="1" Margin="2 2 5 2" Padding="4 0" Content="Opcje"/>
-            <Button Command="{Binding AboutWindowCommand}" Grid.Column="2" Margin="2 2 5 2" Padding="4 0" Content="O programie"/>
+            </Label>            
+            <Button Command="{Binding GoBackCommand}" Grid.Column="1" Margin="2 2 5 2" Padding="4 0" Content="..."/>
+            <Button Command="{Binding OptionsWindowCommand}" Grid.Column="2" Margin="2 2 5 2" Padding="4 0" Content="Opcje"/>
+            <Button Command="{Binding AboutWindowCommand}" Grid.Column="3" Margin="2 2 5 2" Padding="4 0" Content="O programie"/>
         </Grid>
     </Grid>
 </Window>

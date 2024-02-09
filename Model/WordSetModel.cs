@@ -15,10 +15,10 @@ namespace LearningWords.Model
         int exercises { get; set; }
         int tests { get; set; }
         ObservableCollection<WordModel> words { get; set; }
-        WordSetModel paretWordSet { get; set; }
         ObservableCollection<WordSetModel> childWordSets { get; set; }
         DateTime lastUse { get; set; }
         
+        bool isGroup { get; set; }
         
         public string Name
         {
@@ -104,21 +104,22 @@ namespace LearningWords.Model
                 }
             }
         }
-        public WordSetModel ParentWordSet
+        public bool IsGroup
         {
             get
             {
-                return paretWordSet;
+                return isGroup;
             }
             set
             {
-                if (paretWordSet != value)
+                if(value!= isGroup)
                 {
-                    paretWordSet = value;
-                    RaisePropertyChanged("ParentWordSet");
+                    isGroup = value;
+                    RaisePropertyChanged("IsGroup");
                 }
             }
         }
+
         public WordSetModel()
         {
             Words = new ObservableCollection<WordModel>();
@@ -141,14 +142,12 @@ namespace LearningWords.Model
                 });
             }
         }
-        public WordSetModel(ref WordSetModel parent, List<WordSetModel> wordSetModels,string name)
+        public WordSetModel( List<WordSetModel> wordSetModels,string name)
         {
             Name = name;
-            ParentWordSet = parent;
             childWordSets = new ObservableCollection<WordSetModel>(wordSetModels);
         }
-        
-        
+               
 
         public event PropertyChangedEventHandler PropertyChanged;
         private void RaisePropertyChanged(string property)

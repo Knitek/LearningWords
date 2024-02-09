@@ -19,9 +19,10 @@ namespace LearningWords.ViewModel
         public string version = "20220406 v1.2.6";
         WordSetModel wordSet { get; set; }
         WordSetModel selectedWordSet { get; set; }
+        List<WordSetModel> parentWordSet { get; set; }
         string statusText { get; set; }
         public int dayGoal { get; set; }
-
+        WordSetModel currentWordSetList { get; set; }
 
         public WordSetModel WordSet
         {
@@ -48,6 +49,37 @@ namespace LearningWords.ViewModel
                     selectedWordSet = value;
                     RaisePropertyChanged("SelectedWordSet");
                     RaisePropertyChanged("WordSetIsSelected");
+                }
+            }
+        }
+        public List<WordSetModel> ParentWordSet
+        {
+            get { return parentWordSet; }
+            set
+            {
+                if (parentWordSet != value)
+                {
+                    parentWordSet = value;
+                    RaisePropertyChanged("ParentWordSet");
+                }
+            }
+        }
+        public WordSetModel CurrentWordSetList
+        {
+            get
+            {
+                if (currentWordSetList==null)
+                {
+                    currentWordSetList = WordSet;
+                }
+                return currentWordSetList;
+            }
+            set
+            {
+                if(currentWordSetList!= value)
+                {
+                    currentWordSetList = value;
+                    RaisePropertyChanged("CurrentWordSetList");
                 }
             }
         }
@@ -108,6 +140,9 @@ namespace LearningWords.ViewModel
         public CommandBase AddCommand { get; set; }
         public CommandBase EditCommand { get; set; }
         public CommandBase DeleteCommand { get; set; }
+        public CommandBase OpenWordSetGroupCommand { get; set; } 
+        public CommandBase GoBackCommand {  get; set; }
+        public CommandBase BringOutCommand { get; set; }
         public CommandBase TestCommand { get; set; }
         public CommandBase AboutWindowCommand { get; set; }
         public CommandBase OptionsWindowCommand { get; set; }
@@ -138,7 +173,9 @@ namespace LearningWords.ViewModel
             TestCommand = new CommandBase(Test);
             AboutWindowCommand = new CommandBase(AboutWindow);
             OptionsWindowCommand = new CommandBase(OptionsWindow);
-
+            OpenWordSetGroupCommand = new CommandBase(OpenWordSetGroup);
+            GoBackCommand = new CommandBase(GoBack);
+            BringOutCommand = new CommandBase(BringOut);
             ShowStatisticsCommand = new CommandBase(ShowStatistics);
             ImportCommand = new CommandBase(Import);
             ImportClipboardCommand = new CommandBase(ImportClipboard);
@@ -159,6 +196,36 @@ namespace LearningWords.ViewModel
                 MessageBox.Show(exc.Message);
             }
         }
+
+        public void OpenWordSetGroup()
+        {
+            if(SelectedWordSet.ChildWordSets != null && SelectedWordSet.ChildWordSets.Count > 0)
+            {
+                if (ParentWordSet == null)
+                {
+                    ParentWordSet = new List<WordSetModel>();
+                }
+                ParentWordSet.Add(CurrentWordSetList);
+                CurrentWordSetList = SelectedWordSet;
+            }               
+        }
+        public void GoBack()
+        {
+            if(ParentWordSet!=null && ParentWordSet.Count>0)
+            {
+                CurrentWordSetList = ParentWordSet.Last();
+                ParentWordSet.RemoveAt(ParentWordSet.Count-1);
+            }
+        }
+        public void BringOut()
+        {
+            if (ParentWordSet != null && ParentWordSet.Count > 0)
+            {
+                ParentWordSet.Last().ChildWordSets.Add(SelectedWordSet);
+                CurrentWordSetList.ChildWordSets.Remove(SelectedWordSet);
+            }
+        }
+
         private void LoadGoalSettings()
         {
             var dayGoalActive = bool.Parse(Tools.ReadAppSetting("DayGoalActive", "false"));
@@ -320,6 +387,12 @@ namespace LearningWords.ViewModel
                 if (path == null) return;
                 if (System.IO.Path.GetFileName(path).ToLower().Equals("config.xml"))
                 {
+                    var tmpData = ToolsLib.Tools.Deserialize<List<WordSetModel>>(path);
+                    WordSet = new WordSetModel() { ChildWordSets = new ObservableCollection<WordSetModel>(tmpData) };
+                    RaisePropertyChanged("WordSet");
+                }
+                else if(System.IO.Path.GetFileName(path).ToLower().Equals("config_v2.xml"))
+                {
                     var tmpData = ToolsLib.Tools.Deserialize<WordSetModel>(path);
                     WordSet = tmpData;
                     RaisePropertyChanged("WordSet");
@@ -393,7 +466,7 @@ namespace LearningWords.ViewModel
             try
             {
                 string path = ToolsLib.Tools.ReadAppSettingPath("defaultDataDirectory");
-                path = System.IO.Path.Combine(path, "Config.xml");
+                path = System.IO.Path.Combine(path, "Config_v2.xml");
 
                 var tmpData = WordSet;
                 
@@ -409,16 +482,25 @@ namespace LearningWords.ViewModel
             try
             {
                 string path = ToolsLib.Tools.ReadAppSettingPath("defaultDataDirectory");
-                path = System.IO.Path.Combine(path, "Config.xml");
-                if (!System.IO.File.Exists(path))
+                string pathv1 = System.IO.Path.Combine(path, "Config.xml");
+                string pathv2 = System.IO.Path.Combine(path, "Config_v2.xml");
+                if(System.IO.File.Exists(pathv2))
                 {
-                    ToolsLib.Tools.Serialize(new WordSetModel(), path);
-                    WordSet = new WordSetModel();
+                    var tmpData = ToolsLib.Tools.Deserialize<WordSetModel>(pathv2);
+                    WordSet = tmpData;
+                }
+                else if (System.IO.File.Exists(pathv1))
+                {
+                    var tmpData = ToolsLib.Tools.Deserialize<List<WordSetModel>>(pathv1);
+                    WordSet = new WordSetModel()
+                    {
+                        ChildWordSets = new ObservableCollection<WordSetModel>(tmpData),
+                    };
                 }
                 else
                 {
-                    var tmpData = ToolsLib.Tools.Deserialize<WordSetModel>(path);
-                    WordSet = tmpData;
+                    ToolsLib.Tools.Serialize(new WordSetModel(), pathv2);
+                    WordSet = new WordSetModel();                    
                 }                
             }
             catch (Exception exc)
