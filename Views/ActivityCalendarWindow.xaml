@@ -5,34 +5,48 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:LearningWords"
         mc:Ignorable="d"
-        Title="ActivityCalendarWindow" Height="250" Width="520">
+        Title="ActivityCalendarWindow" Height="280" Width="520">
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30px"/>
+            <RowDefinition Height="205px" />
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="50px"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Button Grid.Column="0"  Content="Poprzedni" HorizontalAlignment="Right" Command="{Binding PreviousCommand}" />
+            <Label Grid.Column="1" Content="{Binding CurrentYear}" Width="50px" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            <Button Grid.Column="2"  Content="Następny" HorizontalAlignment="Left" Command="{Binding NextCommand}"/>
+        </Grid>
         <!-- Kalendarz -->
-        <ScrollViewer  HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Disabled">
-            <Grid Margin="5">
+        <ScrollViewer Grid.Row="1" Height="205"  HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Disabled">
+            <Grid Margin="5 0">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="30px"/>
-                    <RowDefinition Height="*"/>
-                </Grid.RowDefinitions>
+                    <RowDefinition Height="25px"/>
+                    <RowDefinition Height="160px"/>
+                </Grid.RowDefinitions>                
                 <Grid Grid.Row="0" >
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="100px"/>
-                        <ColumnDefinition Width="1000px"/>
+                        <ColumnDefinition Width="970px"/>
                         <ColumnDefinition Width="100px"/>
                     </Grid.ColumnDefinitions>
-                    <Label Grid.Column="0" Content="{Binding StartDate}"/>
+                    <Label Grid.Column="0" Content="{Binding StartDate}" HorizontalAlignment="Left" HorizontalContentAlignment="Left"/>
                     <Label Grid.Column="2" Content="{Binding EndDate}" HorizontalAlignment="Right" HorizontalContentAlignment="Right"/>
                 </Grid>
-        <ItemsControl Grid.Row="1" ItemsSource="{Binding CalendarDays}" Height="154px" Width="1200" Margin="0,0" >
+        <ItemsControl Grid.Row="1" ItemsSource="{Binding CalendarDays}" Height="154px" Width="1170" Margin="0,0" >
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
                     <WrapPanel Orientation="Vertical"/>
                 </ItemsPanelTemplate>
             </ItemsControl.ItemsPanel>
             <ItemsControl.ItemTemplate>
-                <DataTemplate>
-                    <Border BorderBrush="Black" BorderThickness="2" CornerRadius="2" Margin="1">
-                        <TextBlock ToolTip="{Binding Date}" HorizontalAlignment="Left" Width="16px" Height="16px"  VerticalAlignment="Center">
+                <DataTemplate >
+                            <Border ToolTip="{Binding Title}" ToolTipService.InitialShowDelay="0" BorderBrush="Black" BorderThickness="2" CornerRadius="2" Margin="1">
+                        <TextBlock  HorizontalAlignment="Left" Width="16px" Height="16px"  VerticalAlignment="Center">
                             <TextBlock.Background>                                
                                     <SolidColorBrush Color="{Binding DayColor}"/>
                             </TextBlock.Background>

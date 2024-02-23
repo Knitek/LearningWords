@@ -3,23 +3,31 @@ using System.Windows.Media;
 using System.Windows.Navigation;
 
 namespace LearningWords.Model
-{    
+{
     public class ActivityDay
     {
         public DateTime Date { get; set; }
         public ActivityLevel ActivityLvl { get; set; } = ActivityLevel.None;
+        public int TestCount { get; set; }
+        public string Title
+        {
+            get
+            {
+                return Date.ToString("d") + " (" + TestCount + ")";
+            }
+        }
         public Color DayColor
         {
             get
             {
-                switch(ActivityLvl)
+                switch (ActivityLvl)
                 {
                     case ActivityLevel.None:
                         return Colors.Transparent;
                     case ActivityLevel.First:
-                        return Colors.GreenYellow;                
+                        return Colors.GreenYellow;
                     case ActivityLevel.Second:
-                        return Colors.Green;                
+                        return Colors.Green;
                     case ActivityLevel.Third:
                         return Colors.DarkGreen;
                     default:
@@ -28,8 +36,8 @@ namespace LearningWords.Model
             }
         }
     }
-                //return IsActive is false ? Colors.Transparent : Colors.Green;
-    public enum ActivityLevel 
+    //return IsActive is false ? Colors.Transparent : Colors.Green;
+    public enum ActivityLevel
     {
         None = 0,
         First = 1,
