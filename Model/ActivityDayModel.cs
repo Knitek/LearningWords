@@ -6,14 +6,14 @@ namespace LearningWords.Model
 {
     public class ActivityDay
     {
-        public DateTime Date { get; set; }
+        public DateTime ActivityDate { get; set; }
         public ActivityLevel ActivityLvl { get; set; } = ActivityLevel.None;
         public int TestCount { get; set; }
         public string Title
         {
             get
             {
-                return Date.ToString("d") + " (" + TestCount + ")";
+                return ActivityDate.ToString("d") + " (" + TestCount + ")";
             }
         }
         public Color DayColor

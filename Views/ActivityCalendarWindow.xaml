@@ -17,9 +17,9 @@
                 <ColumnDefinition Width="50px"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <Button Grid.Column="0"  Content="Poprzedni" HorizontalAlignment="Right" Command="{Binding PreviousCommand}" />
-            <Label Grid.Column="1" Content="{Binding CurrentYear}" Width="50px" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-            <Button Grid.Column="2"  Content="Następny" HorizontalAlignment="Left" Command="{Binding NextCommand}"/>
+            <Button Grid.Column="0" Width="80px"  Content="Poprzedni" HorizontalAlignment="Right" Command="{Binding PreviousCommand}" IsEnabled="{Binding PreviousEnabled}" />
+            <Label Grid.Column="1" Content="{Binding CurrentYear}" Width="50px" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalContentAlignment="Center"/>
+            <Button Grid.Column="2" Width="80px"  Content="Następny" HorizontalAlignment="Left" Command="{Binding NextCommand}" IsEnabled="{Binding NextEnabled}"/>
         </Grid>
         <!-- Kalendarz -->
         <ScrollViewer Grid.Row="1" Height="205"  HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Disabled">
@@ -34,10 +34,10 @@
                         <ColumnDefinition Width="970px"/>
                         <ColumnDefinition Width="100px"/>
                     </Grid.ColumnDefinitions>
-                    <Label Grid.Column="0" Content="{Binding StartDate}" HorizontalAlignment="Left" HorizontalContentAlignment="Left"/>
-                    <Label Grid.Column="2" Content="{Binding EndDate}" HorizontalAlignment="Right" HorizontalContentAlignment="Right"/>
+                    <Label Grid.Column="0" Content="{Binding StartDate}" HorizontalAlignment="Left" HorizontalContentAlignment="Left" BorderThickness="1 1 0 0" BorderBrush="LightGray"/>
+                    <Label Grid.Column="2" Content="{Binding EndDate}" HorizontalAlignment="Right" HorizontalContentAlignment="Right" BorderThickness="0 1 1 0" BorderBrush="LightGray"/>
                 </Grid>
-        <ItemsControl Grid.Row="1" ItemsSource="{Binding CalendarDays}" Height="154px" Width="1170" Margin="0,0" >
+                <ItemsControl Grid.Row="1" ItemsSource="{Binding CurrentDays}" Height="154px" Width="1170" Margin="0,0"  >
             <ItemsControl.ItemsPanel>
                 <ItemsPanelTemplate>
                     <WrapPanel Orientation="Vertical"/>

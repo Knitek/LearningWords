@@ -1,19 +1,39 @@
-﻿using LearningWords.Model;
+﻿using LearningWords.Controls;
+using LearningWords.Model;
 using System;
+using System.CodeDom;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
+using System.Runtime.Remoting.Metadata.W3cXsd2001;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 
 namespace LearningWords.ViewModel
 {
-    public class ActivityCalnedarViewModel
+    public class ActivityCalnedarViewModel : INotifyPropertyChanged
     {
         int currentYear { get; set; }
-
+        List<int> yearList { get; set; }
+        List<ActivityDay> AllDays { get; set; }
+        ObservableCollection<ActivityDay> currentDays { get; set; }
+        public List<int> YearList
+        {
+            get
+            {
+                return yearList;
+            }
+            set
+            {
+                if(value!=yearList)
+                {
+                    yearList = value;
+                    RaisePropertyChanged("YearList");
+                }
+            }
+        }
         public int CurrentYear
         {
             get
@@ -26,16 +46,31 @@ namespace LearningWords.ViewModel
                 {
                     currentYear = value;
                     RaisePropertyChanged("CurrentYear");
+                    RaisePropertyChanged("PreviousEnabled");
+                    RaisePropertyChanged("NextEnabled");
                 }
             }
         }
-
-        public ObservableCollection<ActivityDay> CalendarDays { get; set; }
+        public ObservableCollection<ActivityDay> CurrentDays
+        { 
+            get
+            {
+                return currentDays;
+            }
+            set
+            {
+                if(currentDays!=value)
+                {
+                    currentDays = value;
+                    RaisePropertyChanged("CurrentDays");
+                }
+            }
+        }
         public DateTime StartDate
         {
             get
             {
-                return CalendarDays.First().Date;
+                return CurrentDays.First().ActivityDate;
             }
         }
 
@@ -43,43 +78,95 @@ namespace LearningWords.ViewModel
         {
             get
             {
-                return CalendarDays.Last().Date;
+                return CurrentDays.Last().ActivityDate;
             }
         }
+        public bool PreviousEnabled
+        {
+            get
+            {
+                if (YearList.IndexOf(CurrentYear) == 0)
+                    return false;
+                else
+                    return true;
+            }
+        }
+        public bool NextEnabled
+        {
+            get
+            {
+                if (YearList.IndexOf(CurrentYear) == (YearList.Count - 1))
+                    return false;
+                else
+                    return true;
+            }
+        }
+
+        public CommandBase NextCommand { get; set; }
+        public CommandBase PreviousCommand { get; set; }
         
 
         public ActivityCalnedarViewModel()
         {
-            InitializeCalendar();
             CurrentYear = DateTime.Now.Year;
-            // Tutaj możesz również załadować dane z modelu
+            YearList = new List<int>();
+            InitializeCalendar();
+            NextCommand = new CommandBase(NextYear);
+            PreviousCommand = new CommandBase(PreviousYear);
         }
-
+        private void NextYear()
+        {
+            var yearIndex = YearList.IndexOf(CurrentYear);
+            if (yearIndex == (YearList.Count-1)) return;
+            var tmpYear = YearList[yearIndex + 1];
+            if (YearList.Any(x => x == tmpYear) is false) return;
+            
+            CurrentDays = new ObservableCollection<ActivityDay>(AllDays.Where(x=>x.ActivityDate.Year==tmpYear));
+            CurrentYear = tmpYear;
+        }
+        private void PreviousYear()
+        {
+            var yearIndex = YearList.IndexOf(CurrentYear);
+            if (yearIndex == 0) return;
+            var tmpYear = YearList[yearIndex - 1];
+            if (YearList.Any(x => x == tmpYear) is false) return;
+            CurrentDays = new ObservableCollection<ActivityDay>(AllDays.Where(x => x.ActivityDate.Year == tmpYear));
+            CurrentYear = tmpYear;
+        }
         private void InitializeCalendar()
         {
-            int year = CurrentYear;
-            var lines = System.IO.File.ReadAllLines("LearnLog.txt").Select(x=> DateTime.Parse(x.Split('\t').First()).Date).ToList();
-            // dodać kontorlę błedów do parsowania daty, dodac sprawdzanie istnienia pliku i innych nazw zaczynajacych sie od LearnLog
-            CalendarDays = new ObservableCollection<ActivityDay>();
+            AllDays = new List<ActivityDay>();
+            var logFiles = System.IO.Directory.EnumerateFiles(AppDomain.CurrentDomain.BaseDirectory, "LearnLog*");
+            List<DateTime> dates = new List<DateTime>();
+            foreach (var logFile in logFiles)
+                dates.AddRange(System.IO.File.ReadAllLines(logFile).Where(x=>string.IsNullOrWhiteSpace(x) is false).Select(x=> DateTime.Parse(x.Split('\t').First()).Date).ToList());
+            
+            YearList = dates.Select(x => x.Year).Distinct().OrderBy(x => x).ToList();
+            dates = dates.OrderBy(x => x).ToList();
 
-            DateTime begin = new DateTime(year, 1, 1);
-            DateTime end = new DateTime(year, 12, 31);
-
-            for (DateTime date = begin; date <= end; date = date.AddDays(1))
+            AllDays = new List<ActivityDay>();
+            foreach (var year in YearList)
             {
-                if (date.Day == 30) ;
-                CalendarDays.Add(new ActivityDay { Date = date });
-                var activityPerDay = lines.Where(x => x == CalendarDays.Last().Date.Date).Count();
-                CalendarDays.Last().TestCount = activityPerDay;
-                if (activityPerDay == 0)
-                    CalendarDays.Last().ActivityLvl = ActivityLevel.None;
-                else if (activityPerDay >= 1 && activityPerDay < 3)
-                    CalendarDays.Last().ActivityLvl = ActivityLevel.First;
-                else if (activityPerDay >= 3 && activityPerDay < 5)
-                    CalendarDays.Last().ActivityLvl = ActivityLevel.Second;
-                else if (activityPerDay >= 5)
-                    CalendarDays.Last().ActivityLvl = ActivityLevel.Third;
+                DateTime begin = new DateTime(year, 1, 1);
+                DateTime end = new DateTime(year, 12, 31);
+
+                for (DateTime date = begin; date <= end; date = date.AddDays(1))
+                {
+                    if (date.Day == 30) ;
+                    AllDays.Add(new ActivityDay { ActivityDate = date });
+                    var activityPerDay = dates.Where(x => x == AllDays.Last().ActivityDate.Date).Count();
+                    AllDays.Last().TestCount = activityPerDay;
+                    if (activityPerDay == 0)
+                        AllDays.Last().ActivityLvl = ActivityLevel.None;
+                    else if (activityPerDay >= 1 && activityPerDay < 3)
+                        AllDays.Last().ActivityLvl = ActivityLevel.First;
+                    else if (activityPerDay >= 3 && activityPerDay < 5)
+                        AllDays.Last().ActivityLvl = ActivityLevel.Second;
+                    else if (activityPerDay >= 5)
+                        AllDays.Last().ActivityLvl = ActivityLevel.Third;
+                }
             }
+            CurrentDays = new ObservableCollection<ActivityDay>(AllDays.Where(x => x.ActivityDate.Year == CurrentYear).ToList());
         }
         public event PropertyChangedEventHandler PropertyChanged;
         private void RaisePropertyChanged(string property)
