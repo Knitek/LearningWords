@@ -63,6 +63,8 @@ namespace LearningWords.ViewModel
                 {
                     currentDays = value;
                     RaisePropertyChanged("CurrentDays");
+                    RaisePropertyChanged("StartDate");
+                    RaisePropertyChanged("EndDate");
                 }
             }
         }
@@ -164,6 +166,8 @@ namespace LearningWords.ViewModel
                         AllDays.Last().ActivityLvl = ActivityLevel.Second;
                     else if (activityPerDay >= 5)
                         AllDays.Last().ActivityLvl = ActivityLevel.Third;
+                    if (date.Date == DateTime.Now.Date)
+                        AllDays.Last().ActivityLvl = ActivityLevel.Today;
                 }
             }
             CurrentDays = new ObservableCollection<ActivityDay>(AllDays.Where(x => x.ActivityDate.Year == CurrentYear).ToList());

@@ -30,6 +30,8 @@ namespace LearningWords.Model
                         return Colors.Green;
                     case ActivityLevel.Third:
                         return Colors.DarkGreen;
+                    case ActivityLevel.Today:
+                        return Colors.Red;
                     default:
                         return Colors.Transparent;
                 }
@@ -43,5 +45,6 @@ namespace LearningWords.Model
         First = 1,
         Second = 2,
         Third = 3,
+        Today = 4,
     }
 }
