@@ -466,7 +466,7 @@ namespace LearningWords.ViewModel
         }
         private void SaveLog(string wordSetName,LearnMode learnMode)
         {
-            System.IO.File.AppendAllText("LearnLog.txt", $"{DateTime.Now.ToString()}\t{wordSetName}\t{learnMode}\r\n");
+            System.IO.File.AppendAllText("LearnLog"+DateTime.Now.Year+".txt", $"{DateTime.Now.ToString()}\t{wordSetName}\t{learnMode}\r\n");
         }
         private void ClearStatus()
         {
