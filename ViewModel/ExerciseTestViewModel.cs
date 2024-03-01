@@ -352,9 +352,9 @@ namespace LearningWords.ViewModel
 
             ClearStatusLabel = new Action(async () =>
             {
-                string textToClear = StatusText;
-                await Task.Delay(TimeSpan.FromSeconds(1.5));
-                if (textToClear == StatusText)
+                string textToClear = CurrentWordPair.Word1;
+                await Task.Delay(TimeSpan.FromSeconds(2.5));
+                if (textToClear == CurrentWordPair.Word1)
                 {
                     StatusText = "";
                     StatusTextColor = System.Windows.Media.Brushes.Black;

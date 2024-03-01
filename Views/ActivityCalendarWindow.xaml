@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:LearningWords"
         mc:Ignorable="d"
-        Title="ActivityCalendarWindow" Height="280" Width="520">
+        Title="Kalendarz aktywności" Height="280" Width="520">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="30px"/>
