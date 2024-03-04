@@ -69,6 +69,15 @@ namespace LearningWords
             var changedWordSet = model.CurrentWordSetList.ChildWordSets[rowIndex];
             model.CurrentWordSetList.ChildWordSets.RemoveAt(rowIndex);
             model.CurrentWordSetList.ChildWordSets[index].ChildWordSets.Add(changedWordSet);
+            model.CurrentWordSetList.ChildWordSets[index].ChildWordSets.Add(new WordSetModel(model.CurrentWordSetList.ChildWordSets[index]));
+            model.CurrentWordSetList.ChildWordSets[index].Words.Clear();
+            model.CurrentWordSetList.ChildWordSets[index].Exercises = 0;
+            model.CurrentWordSetList.ChildWordSets[index].Tests = 0;
+            model.CurrentWordSetList.ChildWordSets[index].LastUse = new DateTime();
+            model.CurrentWordSetList.ChildWordSets[index].IsGroup = true;
+            //model.CurrentWordSetList.ChildWordSets[index];
+
+
         }
 
         void productsDataGrid_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)

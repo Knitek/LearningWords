@@ -23,7 +23,7 @@ namespace LearningWords.ViewModel
         string statusText { get; set; }
         public int dayGoal { get; set; }
         WordSetModel currentWordSetList { get; set; }
-
+        bool goBackEnabled { get; set; }
         public WordSetModel WordSet
         {
             get
@@ -135,6 +135,21 @@ namespace LearningWords.ViewModel
                     return true;
             }
         }
+        public bool GoBackEnabled
+        {
+            get
+            {
+                return goBackEnabled;
+            }
+            set
+            {
+                if(value !=  goBackEnabled)
+                {
+                    goBackEnabled = value;
+                    RaisePropertyChanged("GoBackEnabled");
+                }
+            }
+        }
 
         public CommandBase ExerciseCommand { get; set; }
         public CommandBase AddCommand { get; set; }
@@ -199,7 +214,7 @@ namespace LearningWords.ViewModel
 
         public void OpenWordSetGroup()
         {
-            if(SelectedWordSet.ChildWordSets != null && SelectedWordSet.ChildWordSets.Count > 0)
+            if(SelectedWordSet!=null && SelectedWordSet.ChildWordSets != null && SelectedWordSet.ChildWordSets.Count > 0)
             {
                 if (ParentWordSet == null)
                 {
@@ -207,6 +222,7 @@ namespace LearningWords.ViewModel
                 }
                 ParentWordSet.Add(CurrentWordSetList);
                 CurrentWordSetList = SelectedWordSet;
+                GoBackEnabled = true;
             }               
         }
         public void GoBack()
@@ -215,7 +231,11 @@ namespace LearningWords.ViewModel
             {
                 CurrentWordSetList = ParentWordSet.Last();
                 ParentWordSet.RemoveAt(ParentWordSet.Count-1);
+                if (ParentWordSet.Count == 0)
+                    GoBackEnabled = false;
             }
+            else
+                GoBackEnabled = false;
         }
         public void BringOut()
         {
