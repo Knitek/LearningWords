@@ -45,6 +45,7 @@ namespace LearningWords
         }
         public delegate Point GetPosition(IInputElement element);
         int rowIndex = -1;
+        int test = -1;
         
         void doubleClick(object sender, RoutedEventArgs e)
         {
@@ -67,8 +68,19 @@ namespace LearningWords
             }
 
             var changedWordSet = model.CurrentWordSetList.ChildWordSets[rowIndex];
-            model.CurrentWordSetList.ChildWordSets.RemoveAt(rowIndex);
+            var changedWordSet1 = wordSetDataGrid.Items.GetItemAt(rowIndex);
+            System.Windows.Controls.DataGridRow rowToMove = e.Data.GetData(typeof(System.Windows.Controls.DataGridRow)) as System.Windows.Controls.DataGridRow;
+            model.CurrentWordSetList.ChildWordSets.Remove(changedWordSet);
             model.CurrentWordSetList.ChildWordSets[index].ChildWordSets.Add(changedWordSet);
+            model.CurrentWordSetList.ChildWordSets[index].ChildWordSets.Add(new WordSetModel(model.CurrentWordSetList.ChildWordSets[index]));
+            model.CurrentWordSetList.ChildWordSets[index].Words.Clear();
+            model.CurrentWordSetList.ChildWordSets[index].Exercises = 0;
+            model.CurrentWordSetList.ChildWordSets[index].Tests = 0;
+            model.CurrentWordSetList.ChildWordSets[index].LastUse = new DateTime();
+            model.CurrentWordSetList.ChildWordSets[index].IsGroup = true;
+            //model.CurrentWordSetList.ChildWordSets[index];
+
+
         }
 
         void productsDataGrid_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -76,10 +88,11 @@ namespace LearningWords
             rowIndex = GetCurrentRowIndex(e.GetPosition);
             if (rowIndex < 0)
                 return;
-            wordSetDataGrid.SelectedIndex = rowIndex;
-            WordSetModel selectedEmp = wordSetDataGrid.Items[rowIndex] as WordSetModel;
+            WordSetModel selectedEmp = wordSetDataGrid.Items.GetItemAt(rowIndex) as WordSetModel;
             if (selectedEmp == null)
                 return;
+            test = wordSetDataGrid.Items.IndexOf(selectedEmp);
+            wordSetDataGrid.SelectedIndex = rowIndex;
             DragDropEffects dragdropeffects = DragDropEffects.Move;
             if (DragDrop.DoDragDrop(wordSetDataGrid, selectedEmp, dragdropeffects)
                                 != DragDropEffects.None)
@@ -90,6 +103,7 @@ namespace LearningWords
 
         private bool GetMouseTargetRow(Visual theTarget, GetPosition position)
         {
+            if (theTarget == null) return false;
             Rect rect = VisualTreeHelper.GetDescendantBounds(theTarget);
             Point point = position((IInputElement)theTarget);
             return rect.Contains(point);
