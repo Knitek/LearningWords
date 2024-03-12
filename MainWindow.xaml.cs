@@ -61,23 +61,27 @@ namespace LearningWords
                 return;
             if (index == rowIndex)
                 return;
-            if (index == wordSetDataGrid.Items.Count - 1)
+            if (index == wordSetDataGrid.Items.Count)
             {
                 MessageBox.Show("This row-index cannot be drop");
                 return;
             }
 
-            var changedWordSet = model.CurrentWordSetList.ChildWordSets[rowIndex];
-            var changedWordSet1 = wordSetDataGrid.Items.GetItemAt(rowIndex);
+
             System.Windows.Controls.DataGridRow rowToMove = e.Data.GetData(typeof(System.Windows.Controls.DataGridRow)) as System.Windows.Controls.DataGridRow;
-            model.CurrentWordSetList.ChildWordSets.Remove(changedWordSet);
-            model.CurrentWordSetList.ChildWordSets[index].ChildWordSets.Add(changedWordSet);
-            model.CurrentWordSetList.ChildWordSets[index].ChildWordSets.Add(new WordSetModel(model.CurrentWordSetList.ChildWordSets[index]));
-            model.CurrentWordSetList.ChildWordSets[index].Words.Clear();
-            model.CurrentWordSetList.ChildWordSets[index].Exercises = 0;
-            model.CurrentWordSetList.ChildWordSets[index].Tests = 0;
-            model.CurrentWordSetList.ChildWordSets[index].LastUse = new DateTime();
-            model.CurrentWordSetList.ChildWordSets[index].IsGroup = true;
+            if (((sender as DataGrid).Items[index] as WordSetModel).IsGroup is false)
+            {
+                if (((sender as DataGrid).Items[index] as WordSetModel).ChildWordSets == null) ((sender as DataGrid).Items[index] as WordSetModel).ChildWordSets = new System.Collections.ObjectModel.ObservableCollection<WordSetModel>();
+                ((sender as DataGrid).Items[index] as WordSetModel).ChildWordSets.Add(new WordSetModel(((sender as DataGrid).Items[index] as WordSetModel)));
+            }
+            ((sender as DataGrid).Items[index] as WordSetModel).ChildWordSets.Add(model.SelectedWordSet);
+            ((sender as DataGrid).Items[index] as WordSetModel).Words.Clear();
+            ((sender as DataGrid).Items[index] as WordSetModel).Exercises = 0;
+            ((sender as DataGrid).Items[index] as WordSetModel).Tests = 0;
+            ((sender as DataGrid).Items[index] as WordSetModel).LastUse = new DateTime();
+            ((sender as DataGrid).Items[index] as WordSetModel).IsGroup = true;
+            ((sender as DataGrid).Items[index] as WordSetModel).RefreshWordsCount();
+            model.CurrentWordSetList.ChildWordSets.Remove(model.SelectedWordSet);
             //model.CurrentWordSetList.ChildWordSets[index];
 
 

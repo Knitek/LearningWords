@@ -50,10 +50,11 @@
                 </DataGrid.ContextMenu>
                 <DataGrid.Columns>
                     <DataGridTextColumn Width="*" IsReadOnly="True" Header="Nazwa" Binding="{Binding Name}"/>
-                    <DataGridTextColumn MinWidth="50" IsReadOnly="True" Header="Słówka" Binding="{Binding Words.Count}"/>
+                    <DataGridTextColumn MinWidth="50" IsReadOnly="True" Header="Słówka" Binding="{Binding WordsCount}"/>
                     <DataGridTextColumn MinWidth="50" IsReadOnly="True" Header="Nauka" Binding="{Binding Exercises}"/>
                     <DataGridTextColumn MinWidth="50" IsReadOnly="True" Header="Sprawdziany" Binding="{Binding Tests}"/>
-                    <DataGridTextColumn Width="100" IsReadOnly="True" Header="Ostatnia nauka" Binding="{Binding LastUse, StringFormat=\{0:dd.MM.yyyy HH:mm:ss\}}" />
+                    <!--<DataGridTextColumn Width="100" IsReadOnly="True" Header="Ostatnia nauka" Binding="{Binding LastUse, StringFormat=\{0:dd.MM.yyyy HH:mm:ss\}}" />-->
+                    <DataGridTextColumn Width="100" IsReadOnly="True" Header="Ostatnia nauka" Binding="{Binding LastUseText}" /> 
                 </DataGrid.Columns>
             </DataGrid>
         </Grid>

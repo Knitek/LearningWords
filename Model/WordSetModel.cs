@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
 
 namespace LearningWords.Model
 {
@@ -17,7 +18,6 @@ namespace LearningWords.Model
         ObservableCollection<WordModel> words { get; set; }
         ObservableCollection<WordSetModel> childWordSets { get; set; }
         DateTime lastUse { get; set; }
-        
         bool isGroup { get; set; }
         
         public string Name
@@ -71,6 +71,7 @@ namespace LearningWords.Model
                 {
                     words = value;
                     RaisePropertyChanged("Words");
+                    RaisePropertyChanged("WordsCount");
                 }
             }
         }
@@ -86,7 +87,21 @@ namespace LearningWords.Model
                 {
                     lastUse = value;
                     RaisePropertyChanged("LastUse");
+                    RaisePropertyChanged("LastUseText");
                 }
+            }
+        }
+        [XmlIgnore]
+        public string LastUseText
+        {
+            get
+            {
+                if (IsGroup)
+                {
+                    return "Grupa";
+                }
+                else
+                    return LastUse.ToString("yyyy-MM-dd HH:mm:ss");
             }
         }
         public ObservableCollection<WordSetModel> ChildWordSets
@@ -101,6 +116,7 @@ namespace LearningWords.Model
                 {
                     childWordSets = value;
                     RaisePropertyChanged("ChildWordSets");
+                    RaisePropertyChanged("WordsCount");
                 }
             }
         }
@@ -116,7 +132,15 @@ namespace LearningWords.Model
                 {
                     isGroup = value;
                     RaisePropertyChanged("IsGroup");
+                    RaisePropertyChanged("WordsCount");
                 }
+            }
+        }
+        public int WordsCount
+        {
+            get
+            {                
+                return (ChildWordSets?.Sum(x => x.WordsCount) ?? 0) + (Words?.Count ?? 0);                
             }
         }
 
@@ -126,6 +150,7 @@ namespace LearningWords.Model
         }
         public WordSetModel(WordSetModel source)
         {
+            
             this.Name = source.Name;
             this.Exercises = source.Exercises;
             this.Tests = source.Tests;
@@ -141,13 +166,17 @@ namespace LearningWords.Model
                     Total = pair.Total,
                 });
             }
+            
         }
         public WordSetModel( List<WordSetModel> wordSetModels,string name)
         {
             Name = name;
             childWordSets = new ObservableCollection<WordSetModel>(wordSetModels);
         }
-               
+        public void RefreshWordsCount()
+        {
+            RaisePropertyChanged("WordsCount");
+        }
 
         public event PropertyChangedEventHandler PropertyChanged;
         private void RaisePropertyChanged(string property)
