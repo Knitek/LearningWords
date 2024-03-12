@@ -214,15 +214,22 @@ namespace LearningWords.ViewModel
 
         public void OpenWordSetGroup()
         {
-            if(SelectedWordSet!=null && SelectedWordSet.ChildWordSets != null && SelectedWordSet.ChildWordSets.Count > 0)
+            if(SelectedWordSet!=null)
             {
-                if (ParentWordSet == null)
+                if (SelectedWordSet.ChildWordSets != null && SelectedWordSet.ChildWordSets.Count > 0)
                 {
-                    ParentWordSet = new List<WordSetModel>();
+                    if (ParentWordSet == null)
+                    {
+                        ParentWordSet = new List<WordSetModel>();
+                    }
+                    ParentWordSet.Add(CurrentWordSetList);
+                    CurrentWordSetList = SelectedWordSet;
+                    GoBackEnabled = true;
                 }
-                ParentWordSet.Add(CurrentWordSetList);
-                CurrentWordSetList = SelectedWordSet;
-                GoBackEnabled = true;
+                else
+                {
+                    StatusText = "Pusta grupa";
+                }
             }               
         }
         public void GoBack()
@@ -317,7 +324,7 @@ namespace LearningWords.ViewModel
             if(WordSetIsSelected)
             {
                 var tmpname = SelectedWordSet.Name;
-                WordSet.ChildWordSets.Remove(SelectedWordSet);
+                CurrentWordSetList.ChildWordSets.Remove(SelectedWordSet);
                 StatusText = $"Zestaw '{tmpname}' został usunięty.";
             }
         }
