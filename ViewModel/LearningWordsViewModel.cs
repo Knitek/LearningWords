@@ -344,6 +344,11 @@ namespace LearningWords.ViewModel
         {
             if (WordSetIsSelected)
             {
+                if (SelectedWordSet.IsGroup is true)
+                {
+                    StatusText = "Nie można uruchomić dla grupy.";   
+                    return;
+                }
                 bool? startExercise = true;
                 if (Tools.ReadAppSetting("ShowPreview", "true") == "true")
                 {
@@ -361,6 +366,11 @@ namespace LearningWords.ViewModel
         {
             if(WordSetIsSelected)
             {
+                if (SelectedWordSet.IsGroup is true)
+                {
+                    StatusText = "Nie można uruchomić dla grupy.";
+                    return;
+                }
                 ExerciseTestWindow exerciseTestWindow = new ExerciseTestWindow(SelectedWordSet,true);                
                 RaisePropertyChanged("WordSet");
                 DayGoalStatusText();
@@ -369,6 +379,11 @@ namespace LearningWords.ViewModel
         private void ShowStatistics()
         {
             if (SelectedWordSet == null) return;
+            if (SelectedWordSet.IsGroup is true)
+            {
+                StatusText = "Nie można uruchomić dla grupy.";
+                return;
+            }
             WordSetStatisticsWindow win = new WordSetStatisticsWindow(SelectedWordSet);
             SetPosition(win);
             win.Show();
