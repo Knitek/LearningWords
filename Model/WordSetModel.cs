@@ -5,16 +5,20 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
 
 namespace LearningWords.Model
 {
     public class WordSetModel : INotifyPropertyChanged
     {
         string name { get; set; }
+        string groupName { get; set; }
         int exercises { get; set; }
         int tests { get; set; }
         ObservableCollection<WordModel> words { get; set; }
+        ObservableCollection<WordSetModel> childWordSets { get; set; }
         DateTime lastUse { get; set; }
+        bool isGroup { get; set; }
         
         public string Name
         {
@@ -67,6 +71,7 @@ namespace LearningWords.Model
                 {
                     words = value;
                     RaisePropertyChanged("Words");
+                    RaisePropertyChanged("WordsCount");
                 }
             }
         }
@@ -82,15 +87,70 @@ namespace LearningWords.Model
                 {
                     lastUse = value;
                     RaisePropertyChanged("LastUse");
+                    RaisePropertyChanged("LastUseText");
                 }
             }
         }
+        [XmlIgnore]
+        public string LastUseText
+        {
+            get
+            {
+                if (IsGroup)
+                {
+                    return "Grupa";
+                }
+                else
+                    return LastUse.ToString("yyyy-MM-dd HH:mm:ss");
+            }
+        }
+        public ObservableCollection<WordSetModel> ChildWordSets
+        {
+            get
+            {
+                return childWordSets;
+            }
+            set
+            {
+                if (childWordSets != value)
+                {
+                    childWordSets = value;
+                    RaisePropertyChanged("ChildWordSets");
+                    RaisePropertyChanged("WordsCount");
+                }
+            }
+        }
+        public bool IsGroup
+        {
+            get
+            {
+                return isGroup;
+            }
+            set
+            {
+                if(value!= isGroup)
+                {
+                    isGroup = value;
+                    RaisePropertyChanged("IsGroup");
+                    RaisePropertyChanged("WordsCount");
+                }
+            }
+        }
+        public int WordsCount
+        {
+            get
+            {                
+                return (ChildWordSets?.Sum(x => x.WordsCount) ?? 0) + (Words?.Count ?? 0);                
+            }
+        }
+
         public WordSetModel()
         {
             Words = new ObservableCollection<WordModel>();
         }
         public WordSetModel(WordSetModel source)
         {
+            
             this.Name = source.Name;
             this.Exercises = source.Exercises;
             this.Tests = source.Tests;
@@ -106,8 +166,18 @@ namespace LearningWords.Model
                     Total = pair.Total,
                 });
             }
+            
         }
-        
+        public WordSetModel( List<WordSetModel> wordSetModels,string name)
+        {
+            Name = name;
+            childWordSets = new ObservableCollection<WordSetModel>(wordSetModels);
+        }
+        public void RefreshWordsCount()
+        {
+            RaisePropertyChanged("WordsCount");
+        }
+
         public event PropertyChangedEventHandler PropertyChanged;
         private void RaisePropertyChanged(string property)
         {

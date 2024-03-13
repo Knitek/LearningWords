@@ -16,13 +16,15 @@ namespace LearningWords.ViewModel
     {
         public string title = "Nauka słówek";
         //public string version = "20200809 v1.2.4";
-        public string version = "20220406 v1.2.6";
-        ObservableCollection<WordSetModel> wordSet { get; set; }
+        public string version = "20240313 v1.3.0";
+        WordSetModel wordSet { get; set; }
         WordSetModel selectedWordSet { get; set; }
+        List<WordSetModel> parentWordSet { get; set; }
         string statusText { get; set; }
         public int dayGoal { get; set; }
-
-        public ObservableCollection<WordSetModel> WordSets
+        WordSetModel currentWordSetList { get; set; }
+        bool goBackEnabled { get; set; }
+        public WordSetModel WordSet
         {
             get
             {
@@ -50,6 +52,37 @@ namespace LearningWords.ViewModel
                 }
             }
         }
+        public List<WordSetModel> ParentWordSet
+        {
+            get { return parentWordSet; }
+            set
+            {
+                if (parentWordSet != value)
+                {
+                    parentWordSet = value;
+                    RaisePropertyChanged("ParentWordSet");
+                }
+            }
+        }
+        public WordSetModel CurrentWordSetList
+        {
+            get
+            {
+                if (currentWordSetList==null)
+                {
+                    currentWordSetList = WordSet;
+                }
+                return currentWordSetList;
+            }
+            set
+            {
+                if(currentWordSetList!= value)
+                {
+                    currentWordSetList = value;
+                    RaisePropertyChanged("CurrentWordSetList");
+                }
+            }
+        }
         public int DayGoal
         {
             get
@@ -69,7 +102,7 @@ namespace LearningWords.ViewModel
         {
             get
             {
-                var todayComplete = wordSet.Where(x => x.LastUse.Date == DateTime.Today.Date).Select(x=>x.Words.Count).Sum();
+                var todayComplete = wordSet.ChildWordSets.Where(x => x.LastUse.Date == DateTime.Today.Date).Select(x=>x.Words.Count).Sum();
                 return todayComplete.ToString() + "/" + DayGoal.ToString();
             }
         }
@@ -102,11 +135,29 @@ namespace LearningWords.ViewModel
                     return true;
             }
         }
+        public bool GoBackEnabled
+        {
+            get
+            {
+                return goBackEnabled;
+            }
+            set
+            {
+                if(value !=  goBackEnabled)
+                {
+                    goBackEnabled = value;
+                    RaisePropertyChanged("GoBackEnabled");
+                }
+            }
+        }
 
         public CommandBase ExerciseCommand { get; set; }
         public CommandBase AddCommand { get; set; }
         public CommandBase EditCommand { get; set; }
         public CommandBase DeleteCommand { get; set; }
+        public CommandBase OpenWordSetGroupCommand { get; set; } 
+        public CommandBase GoBackCommand {  get; set; }
+        public CommandBase BringOutCommand { get; set; }
         public CommandBase TestCommand { get; set; }
         public CommandBase AboutWindowCommand { get; set; }
         public CommandBase OptionsWindowCommand { get; set; }
@@ -121,7 +172,7 @@ namespace LearningWords.ViewModel
         public LearningWordsViewModel()
         {
             SetUpSettings();            
-            WordSets = new ObservableCollection<WordSetModel>();
+            WordSet = new WordSetModel();
             ClearStatusAction = new Action(async () => 
             {
                 string textToClear = StatusText;
@@ -138,8 +189,10 @@ namespace LearningWords.ViewModel
             TestCommand = new CommandBase(Test);
             ActivityCalendarCommand = new CommandBase(ActivityCalendarWindow);
             OptionsWindowCommand = new CommandBase(OptionsWindow);
+            OpenWordSetGroupCommand = new CommandBase(OpenWordSetGroup);
+            GoBackCommand = new CommandBase(GoBack);
+            BringOutCommand = new CommandBase(BringOut);
             AboutWindowCommand = new CommandBase(AboutWindow);
-
             ShowStatisticsCommand = new CommandBase(ShowStatistics);
             ImportCommand = new CommandBase(Import);
             ImportClipboardCommand = new CommandBase(ImportClipboard);
@@ -160,6 +213,48 @@ namespace LearningWords.ViewModel
                 MessageBox.Show(exc.Message);
             }
         }
+
+        public void OpenWordSetGroup()
+        {
+            if(SelectedWordSet!=null)
+            {
+                if (SelectedWordSet.ChildWordSets != null && SelectedWordSet.ChildWordSets.Count > 0)
+                {
+                    if (ParentWordSet == null)
+                    {
+                        ParentWordSet = new List<WordSetModel>();
+                    }
+                    ParentWordSet.Add(CurrentWordSetList);
+                    CurrentWordSetList = SelectedWordSet;
+                    GoBackEnabled = true;
+                }
+                else
+                {
+                    StatusText = "Pusta grupa";
+                }
+            }               
+        }
+        public void GoBack()
+        {
+            if(ParentWordSet!=null && ParentWordSet.Count>0)
+            {
+                CurrentWordSetList = ParentWordSet.Last();
+                ParentWordSet.RemoveAt(ParentWordSet.Count-1);
+                if (ParentWordSet.Count == 0)
+                    GoBackEnabled = false;
+            }
+            else
+                GoBackEnabled = false;
+        }
+        public void BringOut()
+        {
+            if (ParentWordSet != null && ParentWordSet.Count > 0)
+            {
+                ParentWordSet.Last().ChildWordSets.Add(SelectedWordSet);
+                CurrentWordSetList.ChildWordSets.Remove(SelectedWordSet);
+            }
+        }
+
         private void LoadGoalSettings()
         {
             var dayGoalActive = bool.Parse(Tools.ReadAppSetting("DayGoalActive", "false"));
@@ -194,8 +289,8 @@ namespace LearningWords.ViewModel
                 SetPosition(addOrEditWindow);
                 var tmp = addOrEditWindow.RunWindow();
                 if (tmp == null) return;
-                WordSets.Add(tmp);
-                RaisePropertyChanged("WordSets");
+                WordSet.ChildWordSets.Add(tmp);
+                RaisePropertyChanged("WordSet");
                 StatusText = $"Dodano {tmp.Name} do listy zestawów.";
             }
             catch (Exception exc)
@@ -217,7 +312,7 @@ namespace LearningWords.ViewModel
                     SelectedWordSet.Name = tmp.Name;
                     SelectedWordSet.Tests = 0;
                     SelectedWordSet.Words = tmp.Words;
-                    RaisePropertyChanged("WordSets");
+                    RaisePropertyChanged("WordSet");
                     StatusText = $"Zestaw '{tmp.Name}' został zmodyfikowany.";
                 }
             }
@@ -231,7 +326,7 @@ namespace LearningWords.ViewModel
             if(WordSetIsSelected)
             {
                 var tmpname = SelectedWordSet.Name;
-                WordSets.Remove(SelectedWordSet);
+                CurrentWordSetList.ChildWordSets.Remove(SelectedWordSet);
                 StatusText = $"Zestaw '{tmpname}' został usunięty.";
             }
         }
@@ -256,6 +351,11 @@ namespace LearningWords.ViewModel
         {
             if (WordSetIsSelected)
             {
+                if (SelectedWordSet.IsGroup is true)
+                {
+                    StatusText = "Nie można uruchomić dla grupy.";   
+                    return;
+                }
                 bool? startExercise = true;
                 if (Tools.ReadAppSetting("ShowPreview", "true") == "true")
                 {
@@ -264,7 +364,7 @@ namespace LearningWords.ViewModel
                 }
                 if (startExercise is false) return;
                 ExerciseTestWindow exerciseTestWindow = new ExerciseTestWindow(SelectedWordSet, false);
-                RaisePropertyChanged("WordSets");
+                RaisePropertyChanged("WordSet");
                 DayGoalStatusText();
             }
         }
@@ -273,14 +373,24 @@ namespace LearningWords.ViewModel
         {
             if(WordSetIsSelected)
             {
+                if (SelectedWordSet.IsGroup is true)
+                {
+                    StatusText = "Nie można uruchomić dla grupy.";
+                    return;
+                }
                 ExerciseTestWindow exerciseTestWindow = new ExerciseTestWindow(SelectedWordSet,true);                
-                RaisePropertyChanged("WordSets");
+                RaisePropertyChanged("WordSet");
                 DayGoalStatusText();
             }
         }
         private void ShowStatistics()
         {
             if (SelectedWordSet == null) return;
+            if (SelectedWordSet.IsGroup is true)
+            {
+                StatusText = "Nie można uruchomić dla grupy.";
+                return;
+            }
             WordSetStatisticsWindow win = new WordSetStatisticsWindow(SelectedWordSet);
             SetPosition(win);
             win.Show();
@@ -309,8 +419,8 @@ namespace LearningWords.ViewModel
                     {
                         StatusText = "Możliwy błąd. Edytuj zestaw.";
                     }
-                    WordSets.Add(wordset);
-                    RaisePropertyChanged("WordSets");
+                    WordSet.ChildWordSets.Add(wordset);
+                    RaisePropertyChanged("WordSet");
                 }
             }
             catch (Exception exc)
@@ -326,9 +436,15 @@ namespace LearningWords.ViewModel
                 if (path == null) return;
                 if (System.IO.Path.GetFileName(path).ToLower().Equals("config.xml"))
                 {
-                    var tmpData = ToolsLib.Tools.Deserialize<ObservableCollection<WordSetModel>>(path);
-                    WordSets = tmpData;
-                    RaisePropertyChanged("WordSets");
+                    var tmpData = ToolsLib.Tools.Deserialize<List<WordSetModel>>(path);
+                    WordSet = new WordSetModel() { ChildWordSets = new ObservableCollection<WordSetModel>(tmpData) };
+                    RaisePropertyChanged("WordSet");
+                }
+                else if(System.IO.Path.GetFileName(path).ToLower().Equals("config_v2.xml"))
+                {
+                    var tmpData = ToolsLib.Tools.Deserialize<WordSetModel>(path);
+                    WordSet = tmpData;
+                    RaisePropertyChanged("WordSet");
                 }
                 else
                 {
@@ -355,8 +471,8 @@ namespace LearningWords.ViewModel
                     {
                         StatusText = "Możliwy błąd. Edytuj zestaw.";
                     }
-                    WordSets.Add(wordset);
-                    RaisePropertyChanged("WordSets");
+                    WordSet.ChildWordSets.Add(wordset);
+                    RaisePropertyChanged("WordSet");
                 }
             }
             catch(Exception exc)
@@ -399,8 +515,10 @@ namespace LearningWords.ViewModel
             try
             {
                 string path = ToolsLib.Tools.ReadAppSettingPath("defaultDataDirectory");
-                path = System.IO.Path.Combine(path, "Config.xml");
-                var tmpData = WordSets;
+                path = System.IO.Path.Combine(path, "Config_v2.xml");
+
+                var tmpData = WordSet;
+                
                 Tools.Serialize(tmpData, path);
             }
             catch(Exception exc)
@@ -413,16 +531,25 @@ namespace LearningWords.ViewModel
             try
             {
                 string path = ToolsLib.Tools.ReadAppSettingPath("defaultDataDirectory");
-                path = System.IO.Path.Combine(path, "Config.xml");
-                if (!System.IO.File.Exists(path))
+                string pathv1 = System.IO.Path.Combine(path, "Config.xml");
+                string pathv2 = System.IO.Path.Combine(path, "Config_v2.xml");
+                if(System.IO.File.Exists(pathv2))
                 {
-                    ToolsLib.Tools.Serialize(new ObservableCollection<WordSetModel>(), path);
-                    WordSets = new ObservableCollection<WordSetModel>();
+                    var tmpData = ToolsLib.Tools.Deserialize<WordSetModel>(pathv2);
+                    WordSet = tmpData;
+                }
+                else if (System.IO.File.Exists(pathv1))
+                {
+                    var tmpData = ToolsLib.Tools.Deserialize<List<WordSetModel>>(pathv1);
+                    WordSet = new WordSetModel()
+                    {
+                        ChildWordSets = new ObservableCollection<WordSetModel>(tmpData),
+                    };
                 }
                 else
                 {
-                    var tmpData = ToolsLib.Tools.Deserialize<ObservableCollection<WordSetModel>>(path);
-                    WordSets = tmpData;
+                    ToolsLib.Tools.Serialize(new WordSetModel(), pathv2);
+                    WordSet = new WordSetModel();                    
                 }                
             }
             catch (Exception exc)
