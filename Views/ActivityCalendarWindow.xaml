@@ -1,0 +1,73 @@
+﻿<Window x:Class="LearningWords.Views.ActivityCalendarWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:LearningWords"
+        mc:Ignorable="d"
+        Title="Kalendarz aktywności" Height="280" Width="520">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30px"/>
+            <RowDefinition Height="205px" />
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="50px"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Button Grid.Column="0" Width="80px"  Content="Poprzedni" HorizontalAlignment="Right" Command="{Binding PreviousCommand}" IsEnabled="{Binding PreviousEnabled}" />
+            <Label Grid.Column="1" Content="{Binding CurrentYear}" Width="50px" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalContentAlignment="Center"/>
+            <Button Grid.Column="2" Width="80px"  Content="Następny" HorizontalAlignment="Left" Command="{Binding NextCommand}" IsEnabled="{Binding NextEnabled}"/>
+        </Grid>
+        <!-- Kalendarz -->
+        <ScrollViewer Grid.Row="1" Height="205"  HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Disabled">
+            <Grid Margin="5 0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="25px"/>
+                    <RowDefinition Height="160px"/>
+                </Grid.RowDefinitions>                
+                <Grid Grid.Row="0" >
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="100px"/>
+                        <ColumnDefinition Width="970px"/>
+                        <ColumnDefinition Width="100px"/>
+                    </Grid.ColumnDefinitions>
+                    <Label Grid.Column="0" Content="{Binding StartDate}" HorizontalAlignment="Left" HorizontalContentAlignment="Left" BorderThickness="1 1 0 0" BorderBrush="LightGray"/>
+                    <Label Grid.Column="2" Content="{Binding EndDate}" HorizontalAlignment="Right" HorizontalContentAlignment="Right" BorderThickness="0 1 1 0" BorderBrush="LightGray"/>
+                </Grid>
+                <ItemsControl Grid.Row="1" ItemsSource="{Binding CurrentDays}" Height="154px" Width="1170" Margin="0,0"  >
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <WrapPanel Orientation="Vertical"/>
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+                <DataTemplate >
+                            <Border ToolTip="{Binding Title}" ToolTipService.InitialShowDelay="0" BorderBrush="Black" BorderThickness="2" CornerRadius="2" Margin="1">
+                        <TextBlock  HorizontalAlignment="Left" Width="16px" Height="16px"  VerticalAlignment="Center">
+                            <TextBlock.Background>                                
+                                    <SolidColorBrush Color="{Binding DayColor}"/>
+                            </TextBlock.Background>
+                        </TextBlock>
+                    </Border>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+                    </Grid>
+        </ScrollViewer>
+        <!-- Dodatkowe elementy, np. wybór daty, itp. -->
+    </Grid>
+    <!--<Grid>
+        <Calendar x:Name="calendar" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10" 
+                  DisplayDateStart="{Binding StartDate, Mode=OneWay}" DisplayDateEnd="{Binding EndDate, Mode=OneWay}" SelectedDate="{Binding CalendarDays}" >
+            --><!--SelectionMode="SingleDate" SelectedDate="{Binding SelectedDate, Mode=TwoWay}"--><!--            
+            <Calendar.CalendarDayButtonStyle>
+                <Style TargetType="CalendarDayButton">
+                    <Setter Property="Background" Value="{Binding DayColor}"/>
+                </Style>
+            </Calendar.CalendarDayButtonStyle>
+        </Calendar>
+    </Grid>-->
+</Window>

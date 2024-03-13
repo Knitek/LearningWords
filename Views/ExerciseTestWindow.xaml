@@ -5,9 +5,9 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:LearningWords"
         mc:Ignorable="d"
-        FontSize="14"
+        FontSize="14"        
         FocusManager.FocusedElement="{Binding ElementName=AnswerTextBox}"
-        Title="" Height="235" MinHeight="235" MinWidth="300" Width="300">
+        Title="" Height="{Binding WindowHeight,Mode=TwoWay}" MinHeight="235" MinWidth="300" Width="{Binding WindowWidth,Mode=TwoWay}">
     <Window.InputBindings>
         <KeyBinding Key="Return" Command="{Binding CheckCommand}"/>
         <KeyBinding Key="RightCtrl" Modifiers="Ctrl" Command="{Binding PromptCommand}"/>
@@ -25,8 +25,7 @@
                 <MenuItem Height="25" Header="Opcje">
                     <CheckBox Content="Tryb odwrócony" IsChecked="{Binding Direction}"/>                    
                 </MenuItem>
-            </Menu>
-            
+            </Menu>            
         </Grid>
         <TextBox IsReadOnly="True" Grid.Row="1" Text="{Binding AskedWord}" Margin="5 8" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
         <TextBox Grid.Row="2" Name="AnswerTextBox" Text="{Binding Answer,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Margin="5 8" HorizontalContentAlignment="Center" 

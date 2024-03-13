@@ -161,6 +161,7 @@ namespace LearningWords.ViewModel
         public CommandBase TestCommand { get; set; }
         public CommandBase AboutWindowCommand { get; set; }
         public CommandBase OptionsWindowCommand { get; set; }
+        public CommandBase ActivityCalendarCommand { get; set; }
 
         public CommandBase ShowStatisticsCommand { get; set; }
         public CommandBase ImportCommand { get; set; }
@@ -186,11 +187,12 @@ namespace LearningWords.ViewModel
             EditCommand = new CommandBase(Edit);
             DeleteCommand = new CommandBase(Delete);
             TestCommand = new CommandBase(Test);
-            AboutWindowCommand = new CommandBase(AboutWindow);
+            ActivityCalendarCommand = new CommandBase(ActivityCalendarWindow);
             OptionsWindowCommand = new CommandBase(OptionsWindow);
             OpenWordSetGroupCommand = new CommandBase(OpenWordSetGroup);
             GoBackCommand = new CommandBase(GoBack);
             BringOutCommand = new CommandBase(BringOut);
+            AboutWindowCommand = new CommandBase(AboutWindow);
             ShowStatisticsCommand = new CommandBase(ShowStatistics);
             ImportCommand = new CommandBase(Import);
             ImportClipboardCommand = new CommandBase(ImportClipboard);
@@ -334,6 +336,11 @@ namespace LearningWords.ViewModel
             SetPosition(optionsWindow);
             optionsWindow.Show();
             optionsWindow.Closed += (o, ea) => { LoadGoalSettings(); DayGoalStatusText(); };
+        }
+        private void ActivityCalendarWindow()
+        {
+            Views.ActivityCalendarWindow activityCalendarWindow = new Views.ActivityCalendarWindow();
+            activityCalendarWindow.Show();
         }
         private void AboutWindow()
         {
