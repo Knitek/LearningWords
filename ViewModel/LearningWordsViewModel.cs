@@ -16,7 +16,7 @@ namespace LearningWords.ViewModel
     {
         public string title = "Nauka słówek";
         //public string version = "20200809 v1.2.4";
-        public string version = "20220406 v1.2.6";
+        public string version = "20240313 v1.3.0";
         WordSetModel wordSet { get; set; }
         WordSetModel selectedWordSet { get; set; }
         List<WordSetModel> parentWordSet { get; set; }
