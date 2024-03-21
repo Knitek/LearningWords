@@ -101,8 +101,8 @@ namespace LearningWords.ViewModel
         public string GoalStatus
         {
             get
-            {
-                var todayComplete = wordSet.ChildWordSets.Where(x => x.LastUse.Date == DateTime.Today.Date).Select(x=>x.Words.Count).Sum();
+            {                
+                var todayComplete = WordSet.TodayComplete(DateTime.Now);
                 return todayComplete.ToString() + "/" + DayGoal.ToString();
             }
         }

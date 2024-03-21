@@ -168,6 +168,10 @@ namespace LearningWords.Model
             }
             
         }
+        public int TodayComplete(DateTime today)
+        {
+            return (IsGroup ? 0 : (LastUse.Date == today.Date ? Words.Count : 0)) + (ChildWordSets!=null ? ChildWordSets.Sum(x=>x.TodayComplete(today)) : 0 );
+        }
         public WordSetModel( List<WordSetModel> wordSetModels,string name)
         {
             Name = name;

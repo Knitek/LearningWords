@@ -34,7 +34,7 @@ namespace LearningWords.ViewModel
         bool allowHints { get; set; }
         Dictionary<string,string> specialCharacters { get; set; }
         List<WordModel> correctAnswered { get; set; }
-
+        bool isFinished { get; set; }
         int windowHeight { get; set; }
         int windowWidth { get; set; }
 
@@ -333,7 +333,7 @@ namespace LearningWords.ViewModel
             WindowHeight = int.Parse(Tools.ReadAppSetting("ExerciseTestWindowHeight", "235"));
             WindowWidth = int.Parse(Tools.ReadAppSetting("ExerciseTestWindowWidth", "300"));
             HintCircle = System.Windows.Media.Brushes.Transparent;
-
+            isFinished = false;
             counter = 0;
             Mode = LearnMode.Exercise;
             StatusTextColor = System.Windows.Media.Brushes.Black;
@@ -418,6 +418,7 @@ namespace LearningWords.ViewModel
                             WordSet.LastUse = DateTime.Now;
                             WordSet.Tests++;
                             StatusText = "Koniec";
+                            isFinished = true;
                             SaveLog(WordSet.Name, Mode);
                             return;
                         }
@@ -453,6 +454,7 @@ namespace LearningWords.ViewModel
                                 WordSet.LastUse = DateTime.Now;
                                 WordSet.Exercises++;
                                 StatusText = "Koniec";
+                                isFinished = true;
                                 SaveLog(WordSet.Name,Mode);
                                 return;
                             }
@@ -474,7 +476,7 @@ namespace LearningWords.ViewModel
         }
         private bool IsFinished()
         {
-            if (StatusText == "Koniec")
+            if (isFinished)
             {
                 for (int i = 0; i < oldWordSet.Words.Count; i++)
                 {
