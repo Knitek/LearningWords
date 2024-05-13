@@ -31,7 +31,7 @@
             </StackPanel>
         </Grid>
         <Grid Grid.Row="1">
-            <DataGrid RowHeaderWidth="0" CanUserResizeRows="False" ItemsSource="{Binding CurrentWordSetList.ChildWordSets}" SelectedItem="{Binding SelectedWordSet}" AllowDrop="True" SelectionMode="Extended" AutoGenerateColumns="False" CanUserAddRows="False" Margin="5" Name="wordSetDataGrid">
+            <DataGrid CanUserSortColumns="True"  RowHeaderWidth="0" CanUserResizeRows="False" SelectionUnit="FullRow" HeadersVisibility="Column" ItemsSource="{Binding CurrentWordSetList.ChildWordSets}" SelectedItem="{Binding SelectedWordSet}" AllowDrop="True" SelectionMode="Extended" AutoGenerateColumns="False" CanUserAddRows="False" Margin="5" Name="wordSetDataGrid" >
                 <DataGrid.ContextMenu>
                     <ContextMenu>                        
                         <MenuItem Header="Otwórz grupę" Command="{Binding OpenWordSetGroupCommand}" ToolTip="Otwiera grupę zestawów słów"/>

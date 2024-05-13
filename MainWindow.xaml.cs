@@ -48,7 +48,7 @@ namespace LearningWords
         int test = -1;
         
         void doubleClick(object sender, RoutedEventArgs e)
-        {
+        {            
             model.OpenWordSetGroup();
         }
 
@@ -89,6 +89,13 @@ namespace LearningWords
 
         void productsDataGrid_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
+            DataGrid grd = e.Source as DataGrid;
+            if (grd == null)
+                return;
+            //make sure the row under the grid is being selected
+            Point position = e.GetPosition(grd);
+            if (position.Y < 20)
+                return;
             rowIndex = GetCurrentRowIndex(e.GetPosition);
             if (rowIndex < 0)
                 return;

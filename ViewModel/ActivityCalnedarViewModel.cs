@@ -68,19 +68,19 @@ namespace LearningWords.ViewModel
                 }
             }
         }
-        public DateTime StartDate
+        public string StartDate
         {
             get
             {
-                return CurrentDays.First().ActivityDate;
+                return CurrentDays.First().ActivityDate.ToString("dd.MM.yyyy");
             }
         }
 
-        public DateTime EndDate
+        public string EndDate
         {
             get
             {
-                return CurrentDays.Last().ActivityDate;
+                return CurrentDays.Last().ActivityDate.ToString("dd.MM.yyyy");
             }
         }
         public bool PreviousEnabled

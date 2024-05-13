@@ -353,9 +353,11 @@ namespace LearningWords.ViewModel
             ClearStatusLabel = new Action(async () =>
             {
                 string textToClear = CurrentWordPair.Word1;
+                System.Diagnostics.Debug.WriteLine(CurrentWordPair.Word1);
                 await Task.Delay(TimeSpan.FromSeconds(2.5));
                 if (textToClear == CurrentWordPair.Word1)
                 {
+                    System.Diagnostics.Debug.WriteLine("AfterDelay: "+CurrentWordPair.Word1);
                     StatusText = "";
                     StatusTextColor = System.Windows.Media.Brushes.Black;
                 }
@@ -406,6 +408,11 @@ namespace LearningWords.ViewModel
                     CurrentWordPair.Total++;
                     if (Mode == LearnMode.Test) state++; //when test mode, program don't give time to see what's wrong and automaticly passes to last state             
                 }
+            }
+            if(state == 3)
+            {
+                if (StatusText.StartsWith("Źle"))
+                    StatusText = string.Empty;
             }
             switch (Mode)
             {
@@ -462,9 +469,9 @@ namespace LearningWords.ViewModel
                         break;
                     }                    
             }
-            if (state != 2)
-                ClearStatus();
-            
+            //if (state != 2)
+            //    ClearStatus();
+
         }
         private void SaveLog(string wordSetName,LearnMode learnMode)
         {
