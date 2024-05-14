@@ -24,6 +24,7 @@ namespace LearningWords.ViewModel
         System.Windows.Media.Brush statusTextColor { get; set; }
         System.Windows.Media.Brush hintCircle { get; set; }
         WordModel currentWordPair { get; set; }
+        List<WordModel> mistakesWordSet { get; set; }
         string answer { get; set; }
         int counter { get; set; }
         int leftCount { get; set; }
@@ -292,6 +293,21 @@ namespace LearningWords.ViewModel
                 }
             }
         }
+        public List<WordModel> MistakesWordSet
+        {
+            get
+            {
+                return mistakesWordSet;
+            }
+            set
+            {
+                if (mistakesWordSet != value)
+                {
+                    mistakesWordSet = value;
+                    RaisePropertyChanged("MistakesWordSet");
+                }
+            }
+        }
         public bool PromptIsActive
         {
             get
@@ -304,7 +320,7 @@ namespace LearningWords.ViewModel
         }
         public CommandBase CheckCommand { get; set; }
         public CommandBase PromptCommand { get; set; }
-        
+
 
         public ExerciseTestViewModel(WordSetModel wordset)
         {
@@ -312,7 +328,7 @@ namespace LearningWords.ViewModel
             {
                 specialCharactersMode = true;
                 string filename = Tools.ReadAppSettingPath("SpecialCharacters");
-                if(File.Exists(filename))
+                if (File.Exists(filename))
                 {
                     LoadSpecialCharacters(filename);
                 }
@@ -322,9 +338,9 @@ namespace LearningWords.ViewModel
                 }
             }
 
-            if(Tools.ReadAppSetting("AllowHints","true")=="true")
+            if (Tools.ReadAppSetting("AllowHints", "true") == "true")
             {
-                AllowHints = true;                
+                AllowHints = true;
             }
             else
             {
@@ -342,6 +358,7 @@ namespace LearningWords.ViewModel
             oldWordSet = new WordSetModel(WordSet);
             ToolsLib.Tools.Shuffle(WordSet.Words);
             correctAnswered = new List<WordModel>();
+            MistakesWordSet = new List<WordModel>();     
 
             CurrentWordPair = WordSet.Words.First();
             AskedWord = CurrentWordPair.GetWord(direction);
@@ -406,7 +423,11 @@ namespace LearningWords.ViewModel
                     StatusText = "Źle, powinno być: " + CurrentWordPair.GetAnswer(Direction);
                     StatusTextColor = System.Windows.Media.Brushes.DarkRed;
                     CurrentWordPair.Total++;
-                    if (Mode == LearnMode.Test) state++; //when test mode, program don't give time to see what's wrong and automaticly passes to last state             
+                    if (Mode == LearnMode.Test) state++; //when test mode, program don't give time to see what's wrong and automaticly passes to last state
+                    
+                    if(MistakesWordSet.Any(x=>x.Word1==CurrentWordPair.Word1) is false) 
+                        MistakesWordSet.Add(new WordModel() { Word1 = CurrentWordPair.Word1, Word2 = CurrentWordPair.Word2 });
+                    
                 }
             }
             if(state == 3)

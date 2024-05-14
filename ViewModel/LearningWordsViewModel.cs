@@ -364,6 +364,35 @@ namespace LearningWords.ViewModel
                 }
                 if (startExercise is false) return;
                 ExerciseTestWindow exerciseTestWindow = new ExerciseTestWindow(SelectedWordSet, false);
+
+                if (SelectedWordSet.IsTemporary)
+                {
+                    var mistakeList = (exerciseTestWindow.DataContext as ExerciseTestViewModel).MistakesWordSet;
+                    if (mistakeList.Count>0)
+                    {
+                        SelectedWordSet.Words = new ObservableCollection<WordModel>(mistakeList);
+                    }
+                    else
+                    {
+                        //SelectedWordSet.Words.Clear();
+                        WordSet.ChildWordSets.Remove(SelectedWordSet);
+                    }
+                }
+                else
+                {
+                    var mistakeList = (exerciseTestWindow.DataContext as ExerciseTestViewModel).MistakesWordSet;
+                    if (WordSet.ChildWordSets.Any(x => x.IsTemporary))
+                    {
+                        var tempList = WordSet.ChildWordSets.First(x => x.IsTemporary);
+                        var newMistakes = mistakeList.Where(x => tempList.Words.Any(z => z.Word1 == x.Word1) is false).ToList();
+                        foreach (var temp in newMistakes) { tempList.Words.Add(temp); }
+                    }
+                    else
+                    {
+                        WordSet.ChildWordSets.Add(new WordSetModel() { IsTemporary = true, IsGroup = false, Name = "(Powtórka)", Words = new ObservableCollection<WordModel>(mistakeList) });
+                    }
+                }
+                ;
                 RaisePropertyChanged("WordSet");
                 DayGoalStatusText();
             }

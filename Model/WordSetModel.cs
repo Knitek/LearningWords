@@ -15,6 +15,7 @@ namespace LearningWords.Model
         string groupName { get; set; }
         int exercises { get; set; }
         int tests { get; set; }
+        bool isTemporary { get; set; }
         ObservableCollection<WordModel> words { get; set; }
         ObservableCollection<WordSetModel> childWordSets { get; set; }
         DateTime lastUse { get; set; }
@@ -136,11 +137,26 @@ namespace LearningWords.Model
                 }
             }
         }
+        public bool IsTemporary
+        {
+            get
+            {
+                return isTemporary;
+            }
+            set
+            {
+                if(isTemporary != value)
+                {
+                    isTemporary = value;
+                    RaisePropertyChanged("IsTemporary");
+                }
+            }
+        }
         public int WordsCount
         {
             get
             {                
-                return (ChildWordSets?.Sum(x => x.WordsCount) ?? 0) + (Words?.Count ?? 0);                
+                return (ChildWordSets?.Where(x=>x.IsTemporary is false)?.Sum(x => x.WordsCount) ?? 0) + (Words?.Count ?? 0);                
             }
         }
 
@@ -155,6 +171,7 @@ namespace LearningWords.Model
             this.Exercises = source.Exercises;
             this.Tests = source.Tests;
             this.LastUse = source.LastUse;
+
             Words = new ObservableCollection<WordModel>();
             foreach(var pair in source.Words)
             {
