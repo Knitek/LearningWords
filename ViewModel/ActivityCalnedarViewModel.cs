@@ -154,7 +154,6 @@ namespace LearningWords.ViewModel
 
                 for (DateTime date = begin; date <= end; date = date.AddDays(1))
                 {
-                    if (date.Day == 30) ;
                     AllDays.Add(new ActivityDay { ActivityDate = date });
                     var activityPerDay = dates.Where(x => x == AllDays.Last().ActivityDate.Date).Count();
                     AllDays.Last().TestCount = activityPerDay;

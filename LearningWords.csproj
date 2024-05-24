@@ -122,12 +122,16 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Model\ActivityDayModel.cs" />
+    <Compile Include="ViewModel\FlexibleMessageBoxViewModel.cs" />
     <Compile Include="ViewModel\ActivityCalnedarViewModel.cs" />
     <Compile Include="ViewModel\OptionsViewModel.cs" />
     <Compile Include="ViewModel\WordSetPreviewViewModel.cs" />
     <Compile Include="ViewModel\WordSetStatisticsViewModel.cs" />
     <Compile Include="Views\ActivityCalendarWindow.xaml.cs">
       <DependentUpon>ActivityCalendarWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\FlexibleMessageBoxWindow.xaml.cs">
+      <DependentUpon>FlexibleMessageBoxWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\OptionsWindow.xaml.cs">
       <DependentUpon>OptionsWindow.xaml</DependentUpon>
@@ -150,6 +154,10 @@
       <DependentUpon>WordSetStatisticsWindow.xaml</DependentUpon>
     </Compile>
     <Page Include="Views\ActivityCalendarWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\FlexibleMessageBoxWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

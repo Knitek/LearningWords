@@ -9,6 +9,7 @@ using LearningWords.Model;
 using LearningWords.Controls;
 using System.Windows;
 using ToolsLib;
+using LearningWords.Views;
 
 namespace LearningWords.ViewModel
 {
@@ -289,6 +290,7 @@ namespace LearningWords.ViewModel
                 SetPosition(addOrEditWindow);
                 var tmp = addOrEditWindow.RunWindow();
                 if (tmp == null) return;
+                CheckDuplicates(WordSet, tmp);
                 WordSet.ChildWordSets.Add(tmp);
                 RaisePropertyChanged("WordSet");
                 StatusText = $"Dodano {tmp.Name} do listy zestawów.";
@@ -301,14 +303,19 @@ namespace LearningWords.ViewModel
         private void Edit()
         {
             try
-            {
+            {                
                 if (WordSetIsSelected)
                 {
+                    if(SelectedWordSet.IsTemporary)
+                    {
+                        StatusText = "Zestaw tymczaowy";
+                        return;
+                    }
                     AddOrEditWindow addOrEditWindow = new AddOrEditWindow(SelectedWordSet);
                     SetPosition(addOrEditWindow);
                     var tmp = addOrEditWindow.RunWindow();
                     if (tmp == null) return;
-
+                    CheckDuplicates(WordSet,SelectedWordSet);
                     SelectedWordSet.Name = tmp.Name;
                     SelectedWordSet.Tests = 0;
                     SelectedWordSet.Words = tmp.Words;
@@ -606,7 +613,28 @@ namespace LearningWords.ViewModel
                     return null;
             }
         }
+        private void CheckDuplicates(WordSetModel baseModel, WordSetModel newSet)
+        {
+            var pairsForCheck = newSet.Words.ToList();
+            var all = baseModel.GetChilds();
 
+            if (pairsForCheck.Count == 0) return;
+            if(all.Count == 0) return;
+
+            StringBuilder sb = new StringBuilder();
+            foreach(var ws in all.Where(x => x.Name != newSet.Name))
+            {
+                var duplicates = ws.Words.Where(x => newSet.Words.Any(b => b.Word1 == x.Word1)).ToList();
+                if(duplicates.Count>0)
+                    sb.AppendLine($"Zestaw '{ws.Name}': " + string.Join(",", duplicates.Select(x => x.Word1)));
+            }
+            if(sb.Length>0)
+            {
+                string result = "Znaleziono duplikaty\r\n\r\n" + sb.ToString();
+                FlexibleMessageBoxWindow flexibleMessageBoxWindow = new FlexibleMessageBoxWindow(result);
+                flexibleMessageBoxWindow.Show();
+            }
+        }
         public event PropertyChangedEventHandler PropertyChanged;
         private void RaisePropertyChanged(string property)
         {

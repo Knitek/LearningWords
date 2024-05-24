@@ -185,6 +185,19 @@ namespace LearningWords.Model
             }
             
         }
+        public List<WordSetModel> GetChilds()
+        {
+            var tmp = new List<WordSetModel>();
+            tmp.Add(new WordSetModel()
+            {
+                Name = this.Name,
+                Words = this.Words
+            });
+            if(ChildWordSets!=null)
+                foreach (var c in ChildWordSets)
+                    tmp.AddRange(c.GetChilds());
+            return tmp;
+        }
         public int TodayComplete(DateTime today)
         {
             return (IsGroup ? 0 : (LastUse.Date == today.Date ? Words.Count : 0)) + (ChildWordSets!=null ? ChildWordSets.Sum(x=>x.TodayComplete(today)) : 0 );
